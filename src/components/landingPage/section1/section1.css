@@ -1,0 +1,35 @@
+
+
+.landingSection1{
+    position: absolute;
+    left: 0%;
+    top: 0%;
+}
+
+
+.banner__image{
+      height:80vh
+
+}
+
+
+.banner_image_inner{
+    width:100%;
+    height: 100%;
+}
+
+
+.banner__text{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:aliceblue;
+    font-size: 30px;
+}
+
+.banner__text__inner{
+    text-align: center;
+}
