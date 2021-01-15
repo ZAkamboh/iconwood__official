@@ -1,5 +1,6 @@
 import React from 'react'
 import Typical from 'react-typical'
+
 import './section1.css'
 import BannerImage from '../../../assets/landingPage/section1/banner_home.jpg'
 function LandingSection1() {
@@ -24,6 +25,8 @@ function LandingSection1() {
           alt="home__banner"
         />
       </div>
+
+    
     </div>
   )
 }
