@@ -1,0 +1,15 @@
+.address{
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+}
+
+.paddingTopBottom{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.paddingTopBottomPosting{
+    padding-top: 24px;
+    padding-bottom: 24px;
+}

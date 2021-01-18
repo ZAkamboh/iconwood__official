@@ -27,6 +27,7 @@ body{
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
 }
 .navbar__title{
     font-style:normal;
@@ -63,6 +64,7 @@ body{
     width: 35%;
     display: flex;
     justify-content: space-around;
+    cursor: pointer;
 }
 .cartandwishlist{
     background-color: red;

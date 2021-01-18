@@ -1,0 +1,40 @@
+.wishlistAndproductname{
+    position: absolute;
+    margin-top: 1%;
+    margin-left: 1%;
+
+}
+.wishlistIcon{
+    margin-top: 10%;
+    cursor: pointer;
+}
+.title{
+    font-size: 15px;
+    font-weight: 700;
+
+}
+.desc{
+    font-size: 15px;
+    font-weight: 700;
+}
+.rate{
+    font-size: 15px;
+    margin-top: 15px;
+    font-weight: 700;
+    color:#e36c02
+
+}
+
+.viewProductandWishList__Main{
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 15px;
+    font-weight: 700;
+    color:#e36c02;
+    display: flex;
+    justify-content: space-between;
+}
+
+.addtowishlist{
+    border: 1px solid;
+}

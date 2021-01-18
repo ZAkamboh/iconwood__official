@@ -1,0 +1,50 @@
+
+.section3__Main{
+    padding-bottom: 50px;
+    border-bottom: 1px solid grey;
+
+}
+
+
+.section3__Main > h1{
+   
+    padding-top: 20px;
+    line-height: 80px;
+    font-size: 50px;
+}
+
+.section3__Icons{
+    display: flex;
+    justify-content: center;
+}
+.section3__Icons__inner{
+
+   display: flex;
+   justify-content: space-evenly;
+   width:50%;
+   font-weight: bold;
+   font-size: 15px;
+   margin-top: 5%;
+   cursor: pointer;
+}
+
+.colorRed{
+    color:red;
+    font-weight: 900;
+}
+.colorBlue{
+    color:blue;
+    font-weight: 900;
+}
+.colorGreen{
+    color:green;
+    font-weight: 900;
+}
+.colorYellow{
+    color:blueviolet;
+    font-weight: 900;
+}
+.colorBrown{
+    color:brown;
+    font-weight: 900;
+}

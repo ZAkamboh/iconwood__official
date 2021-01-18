@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { LandingSection1,LandingSection2,LandingSection3 } from './components/landingPage'
+import { LandingSection1,LandingSection2,LandingSection3,LandingSection4,LandingSection5 } from './components/landingPage'
+import Footer from "./components/Footer"
 import Navbar from './components/Navbar'
 
 import "./App.css"
@@ -25,9 +26,9 @@ useEffect(() => {
             <LandingSection1 />
             <LandingSection2 />
             <LandingSection3 />
-            <LandingSection3 />
-            <LandingSection3 />
-
+            <LandingSection4/>
+            <LandingSection5/>
+          <Footer/>
           </Route>
         </Switch>
       </div>

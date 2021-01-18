@@ -9,8 +9,8 @@ function Navbar() {
  }
  const forhiddenBorder =()=>{
   setstate(false)
-
  }
+ 
   return (
     <div   className="Navbar__main">
 
