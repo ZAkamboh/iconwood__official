@@ -1,0 +1,84 @@
+
+body{
+    margin:0%
+}
+.Navbar__main__Admin{
+    display: flex;
+    align-items: center;
+    width:100%;
+    border-bottom: 0.1px solid white;
+  
+}
+.borderBottom{
+   border-bottom: 2px solid red;
+   height: 100px;
+   display: flex;
+   align-items: center;
+}
+
+.borderBottomHidden{
+    height: 100px;
+    display: flex;
+    align-items: center;
+ }
+.logo__Admin{
+      width:16%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+}
+.navbar__title__Admin{
+    font-style:normal;
+    color:aliceblue;
+    font-weight:bold;
+    font-size: 35px;
+    text-decoration: none;
+}
+
+.Navbar__content__Admin{
+    width:40%;
+    cursor: pointer;
+}
+.Navbar__content__Admin:hover .Navbar__main__Admin{
+    border-bottom: 2px solid red;
+}
+
+.Navbar__content__inner__Admin{
+    display: flex;
+    justify-content: space-evenly;
+    color: aliceblue;
+    font-size: 20px;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.Navbar__cart__wishlist{
+    width:40%;
+    display: flex;
+    justify-content: flex-end;
+    color:aliceblue
+}
+
+.Navbar__cart__wishlist__inner{
+    width: 35%;
+    display: flex;
+    justify-content: space-around;
+    cursor: pointer;
+}
+.cartandwishlist{
+    background-color: red;
+    width:10vh
+}
+.wishlist{
+    display: flex;
+}
+.wishlistnumeric{
+    margin-left: 5px;
+    background-color: red;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}

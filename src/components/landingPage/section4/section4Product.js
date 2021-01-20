@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function LandingSection4() {
+function Section4products({ item }) {
   const [viewproduct, setviewproduct] = useState(false)
  
   const [section4Data, setsection4Data] = useState([])
@@ -44,23 +44,16 @@ function LandingSection4() {
       setsection4Data([section4Data, ...values])
     })
   }, [])
-const HandleSetViewProduct =(i)=>{
-  if(i){
-    setviewproduct(true)
-  }
-  else{
-    setviewproduct(false)
-  }
+const HandleSetViewProduct =()=>{
+
 }
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-      {  section4Data.map((item,i)=>{
-        return(
           <Grid item xs={3}>
             <Paper
-            onMouseOver={()=>HandleSetViewProduct(i)}
+            onMouseOver={()=>HandleSetViewProduct(true)}
             onMouseLeave={() => setviewproduct(false)}
             className={classes.paper}
           >
@@ -94,8 +87,6 @@ const HandleSetViewProduct =(i)=>{
   
         </Grid>
 
-        )
-      })}
        
   
       </Grid>
@@ -103,4 +94,4 @@ const HandleSetViewProduct =(i)=>{
   )
 }
 
-export default LandingSection4
+export default Section4products

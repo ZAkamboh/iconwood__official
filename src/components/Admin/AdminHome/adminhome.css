@@ -1,0 +1,16 @@
+.admin_home_Main{
+    height:100%;
+    text-align: center;
+    padding-top: 200px;
+}
+
+.admin_home_Main > h1 {
+
+font-size: 80px;
+color:grey
+}
+
+.admin_home_Main > h2 {
+    color:grey;
+    font-weight: bold;
+}
