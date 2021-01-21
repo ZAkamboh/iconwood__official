@@ -8,6 +8,8 @@ body{
     align-items: center;
     width:100%;
     border-bottom: 0.1px solid white;
+background-color: #56574f;
+
   
 }
 .borderBottom{
@@ -81,4 +83,5 @@ body{
     justify-content: center;
     align-items: center;
     border-radius: 20px;
+    font-weight: bold;
 }

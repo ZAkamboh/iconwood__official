@@ -12,18 +12,16 @@ import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import Login from './components/login'
 
+import { Chairs, Sofas } from './components/products'
 
 // admin Panel Routes
-import AdminNavbar from "./components/Admin/AdminNavbar"
+import AdminNavbar from './components/Admin/AdminNavbar'
 import AdminHome from './components/Admin/AdminHome'
-import Adminlandingpage from "./components/Admin/AdminLandingPage"
-
+import Adminlandingpage from './components/Admin/AdminLandingPage'
 
 import { auth } from './database'
 import { useStateValue } from './components/StateProvider'
 import './App.css'
-
-
 function App() {
   const [{ user }, dispatch] = useStateValue()
 
@@ -51,28 +49,25 @@ function App() {
   }, [])
 
   return (
-    <Router>
+    <Router >
       <div className="app">
         <Switch>
-        
-          <Route path="/Admin">
+          <Route exact path="/Admin">
             <Login />
             <Footer />
           </Route>
 
-          <Route path="/AdminHome">
-          <AdminNavbar/>
+          <Route exact path="/AdminHome">
+            <AdminNavbar />
             <AdminHome />
           </Route>
 
-          <Route path="/Landingpage">
-          <AdminNavbar/>
-            <Adminlandingpage />
+          <Route exact path="/Landingpage">
+            <AdminNavbar />
+            <Adminlandingpage  />
           </Route>
 
-
-
-          <Route path="/">
+          <Route exact path="/">
             <div className="navbar__app">
               <Navbar />
             </div>
@@ -82,6 +77,16 @@ function App() {
             <LandingSection4 />
             <LandingSection5 />
             <Footer />
+          </Route>
+
+          <Route exact path="/chair">
+            <Navbar />
+            <Chairs />
+          </Route>
+
+          <Route exact path="/sofa">
+            <Navbar />
+            <Sofas />
           </Route>
         </Switch>
       </div>

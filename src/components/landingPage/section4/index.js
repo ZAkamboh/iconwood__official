@@ -13,6 +13,9 @@ import HeartWhite from '../../../assets/landingPage/icons/heartwhite.png'
 
 import Section1B from '../../../assets/landingPage/section2/section2b.jpg'
 import Section1C from '../../../assets/landingPage/section2/section2c.jpg'
+import { Link, useHistory } from 'react-router-dom'
+
+import { useStateValue } from '../../StateProvider'
 
 import './section4.css'
 
@@ -28,76 +31,199 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function LandingSection4() {
+function LandingSection4(props) {
+  const [{ section4Items }, dispatch] = useStateValue()
+  const history = useHistory()
+
   const [viewproduct, setviewproduct] = useState(false)
- 
+  const [wishlist, setwishlist] = useState(false)
+
   const [section4Data, setsection4Data] = useState([])
   const classes = useStyles()
 
   useEffect(() => {
     var values = []
     database.ref(`Section4Data`).once('value', (snap) => {
-      var data = snap.val()
-      for (let keys in data) {
-        values.push({ ...data[keys], key: keys })
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values.push({ ...fetchData[keys], key: keys })
       }
-      setsection4Data([section4Data, ...values])
+      // setsection4Data([section4Data, ...values])
+
+      dispatch({
+        type: 'SECTION4_DATA',
+        payload: values,
+      })
     })
   }, [])
-const HandleSetViewProduct =(i)=>{
-  if(i){
-    setviewproduct(true)
+
+  const _handleWishlistTrue = (item) => {
+    var wishlistData = {
+      title: item.title,
+      desc: item.desc,
+      rate: item.rate,
+      url: item.url,
+      wishlist: true,
+      key:item.key
+    }
+
+    var wishlistArray = JSON.parse(localStorage.getItem("wishlist"));
+    var newArray = [];
+    if (wishlistArray === null) {
+      newArray.push(wishlistData);
+    }
+    else {
+      newArray = wishlistArray ;
+      newArray.push(wishlistData);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(newArray))
+      dispatch({
+      type: "ADD_TO_WISHLIST",
+      payload: newArray
+    })
+
+
+    database
+      .ref(`Section4Data/${item.key}`)
+      .set(wishlistData)
+      .then(() => {
+        const UpdatedValues = []
+        database.ref(`Section4Data`).once('value', (snap) => {
+          const fetchUpdatedData = snap.val()
+          for (let keys in fetchUpdatedData) {
+            UpdatedValues.push({ ...fetchUpdatedData[keys], key: keys })
+          }
+
+          dispatch({
+            type: 'SECTION4_DATA',
+            payload: UpdatedValues,
+          })
+        })
+      })
   }
-  else{
-    setviewproduct(false)
+
+  const _handleWishlistFalse = (item) => {
+    const wishlistData = {
+      title: item.title,
+      desc: item.desc,
+      rate: item.rate,
+      url: item.url,
+      wishlist: false,
+    }
+
+
+
+
+    var wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
+      var newRemoveArray ;
+
+      if (wishlistItems) {
+        newRemoveArray = wishlistItems.filter((f, i) => f.key !== item.key );
+      }
+      else {
+        newRemoveArray = wishlistItems;
+      }
+
+      
+      localStorage.setItem("wishlist",JSON.stringify(newRemoveArray))
+
+
+
+
+     dispatch({
+       type: 'REMOVE_FROM_BASKET',
+       payload: newRemoveArray,
+    })
+
+
+
+
+
+
+
+    database
+      .ref(`Section4Data/${item.key}`)
+      .set(wishlistData)
+      .then(() => {
+        const UpdatedValues = []
+        database.ref(`Section4Data`).once('value', (snap) => {
+          const fetchUpdatedData = snap.val()
+          for (let keys in fetchUpdatedData) {
+            UpdatedValues.push({ ...fetchUpdatedData[keys], key: keys })
+          }
+
+          dispatch({
+            type: 'SECTION4_DATA',
+            payload: UpdatedValues,
+          })
+        })
+      })
   }
-}
+
+
+  
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-      {  section4Data.map((item,i)=>{
-        return(
-          <Grid item xs={3}>
-            <Paper
-            onMouseOver={()=>HandleSetViewProduct(i)}
-            onMouseLeave={() => setviewproduct(false)}
-            className={classes.paper}
-          >
-            <div>
-              <div className="wishlistAndproductname">
-                <div>{item.title}</div>
-                <div className="wishlistIcon">
-                  <img src={HeartWhite} height="35%" width="35%" />
-                </div>
-              </div>
-              <img src={item.url} width="100%" />
-              <Fade bottom delay={1000}>
+        {section4Items.map((item, i) => {
+          return (
+            <Grid key={item} item xs={3}>
+              <Paper
+                onMouseOver={() => setviewproduct(true)}
+                onMouseLeave={() => setviewproduct(false)}
+                className={classes.paper}
+              >
                 <div>
-                  <div className="title">{item.title}</div>
-                  <div className="desc">
-                   {item.desc}
-                  </div>
-                  {!viewproduct && <div className="rate">{item.rate}</div>}
-                  {viewproduct && (
-                    <div className="viewProductandWishList__Main">
-                      <div> View Products</div>
-                      <div style={{ color: 'grey' }}>Add To Wishlist</div>
+                  <div className="wishlistAndproductname">
+                    <div>{item.title}</div>
+                    <div className="wishlistIcon">
+                      {item.wishlist === false ? (
+                        <img
+                          onClick={() => _handleWishlistTrue(item)}
+                          src={HeartWhite}
+                          height="35%"
+                          width="35%"
+                        />
+                      ) : (
+                        <img
+                          onClick={() => _handleWishlistFalse(item)}
+                          src={HeartRed}
+                          height="20%"
+                          width="20%"
+                        />
+                      )}
                     </div>
-                  )}
+                  </div>
+                  <img src={item.url} width="100%" />
+                  <Fade bottom delay={1000}>
+                    <div>
+                      <div className="title">{item.title}</div>
+                      <div className="desc">{item.desc}</div>
+                      {!viewproduct && <div className="rate">{item.rate}</div>}
+                      {viewproduct === true && (
+                        <div className="viewProductandWishList__Main">
+                          <div onClick={()=>history.push({pathname:`${item.title}`,state:{item:item}})}> View Products</div>
+                          <div style={{ color: 'grey' }}>
+                            {item.wishlist === false ? (
+                              <span onClick={() => _handleWishlistTrue(item)}>
+                                Add To Wishlist
+                              </span>
+                            ) : (
+                              <span onClick={() => _handleWishlistFalse(item)}>
+                                Remove From Wishlist
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Fade>
                 </div>
-              </Fade>
-            </div>
-          </Paper>
-          
-         
-  
-        </Grid>
-
-        )
-      })}
-       
-  
+              </Paper>
+            </Grid>
+          )
+        })}
       </Grid>
     </div>
   )

@@ -14,8 +14,11 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { auth, storage,db, database } from '../../../database'
 import { Link, useHistory } from 'react-router-dom'
+import  { useStateValue } from "../../StateProvider"
 
 function Adminlandingpage() {
+  const [{section4Items}, dispatch] = useStateValue();
+
   const history = useHistory()
   const [expand1Icon, setexpand1Icon] = useState(false)
   const [title, settitle] = useState('')
@@ -74,6 +77,8 @@ function Adminlandingpage() {
         desc: desc,
         rate:rate,
         url: imageUrl,
+        wishlist:false,
+        viewproduct:false
       }
       if (data.title === "") {
         alert("title field is required")
@@ -94,12 +99,30 @@ function Adminlandingpage() {
         .push(data)
         .then(response => {
           alert("successfully upload section 4 post")
-          history.replace('/')
+      
 
           settitle('')
           setdesc('')
           setrate('')
           setimageUrl('')
+
+    var values = []
+    database.ref(`Section4Data`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values.push({ ...fetchData[keys], key: keys })
+      }
+      // setsection4Data([section4Data, ...values])
+
+      dispatch({
+        type: "SECTION4_DATA",
+        payload: values,
+      })
+
+    })
+
+    history.replace('/')
+
         })
         .catch(error => {
           alert(error)
