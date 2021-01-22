@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import {
   LandingSection1,
@@ -8,21 +8,31 @@ import {
   LandingSection4,
   LandingSection5,
 } from './components/landingPage'
-import Footer from './components/Footer'
-import Navbar from './components/Navbar'
-import Login from './components/login'
 
+import ViewProduct from './components/products/ViewProduct'
 import { Chairs, Sofas } from './components/products'
 
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+
 // admin Panel Routes
+
+import Login from './components/login'
 import AdminNavbar from './components/Admin/AdminNavbar'
 import AdminHome from './components/Admin/AdminHome'
 import Adminlandingpage from './components/Admin/AdminLandingPage'
 
+// admin Panel Routes End
+
+// context api and database
+
 import { auth } from './database'
 import { useStateValue } from './components/StateProvider'
+
+// context api and database End
+
 import './App.css'
-function App() {
+  function App() {
   const [{ user }, dispatch] = useStateValue()
 
   useEffect(() => {
@@ -49,7 +59,7 @@ function App() {
   }, [])
 
   return (
-    <Router >
+    <Router>
       <div className="app">
         <Switch>
           <Route exact path="/Admin">
@@ -64,7 +74,7 @@ function App() {
 
           <Route exact path="/Landingpage">
             <AdminNavbar />
-            <Adminlandingpage  />
+            <Adminlandingpage />
           </Route>
 
           <Route exact path="/">
@@ -76,6 +86,14 @@ function App() {
             <LandingSection3 />
             <LandingSection4 />
             <LandingSection5 />
+            <Footer />
+          </Route>
+
+          <Route exact path="/ViewProduct">
+            <div className="navbar__app">
+              <Navbar />
+            </div>
+            <ViewProduct />
             <Footer />
           </Route>
 

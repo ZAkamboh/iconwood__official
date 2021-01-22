@@ -14,7 +14,7 @@ import HeartWhite from '../../../assets/landingPage/icons/heartwhite.png'
 import Section1B from '../../../assets/landingPage/section2/section2b.jpg'
 import Section1C from '../../../assets/landingPage/section2/section2c.jpg'
 import { Link, useHistory } from 'react-router-dom'
-
+import Visibility from '@material-ui/icons/Visibility';
 import { useStateValue } from '../../StateProvider'
 
 import './section4.css'
@@ -194,8 +194,10 @@ function LandingSection4(props) {
                         />
                       )}
                     </div>
+                    {viewproduct && <div onClick={()=>history.push({pathname:`/ViewProduct`,state:{item:item}})} className="visibility"><Visibility/></div>}
+
                   </div>
-                  <img src={item.url} width="100%" />
+                  <img onClick={()=>history.push({pathname:`/ViewProduct`,state:{item:item}})} src={item.url} width="100%" />
                   <Fade bottom delay={1000}>
                     <div>
                       <div className="title">{item.title}</div>
@@ -203,7 +205,7 @@ function LandingSection4(props) {
                       {!viewproduct && <div className="rate">{item.rate}</div>}
                       {viewproduct === true && (
                         <div className="viewProductandWishList__Main">
-                          <div onClick={()=>history.push({pathname:`${item.title}`,state:{item:item}})}> View Products</div>
+                          <div onClick={()=>history.push({pathname:`${item.title}`})} > View Products</div>
                           <div style={{ color: 'grey' }}>
                             {item.wishlist === false ? (
                               <span onClick={() => _handleWishlistTrue(item)}>

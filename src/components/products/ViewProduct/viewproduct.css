@@ -1,0 +1,23 @@
+.Buttons{
+display: flex;
+justify-content: space-evenly;
+margin-top: 30px;
+}
+
+.Buttons__shopNow {
+    border-radius: 2px;
+    width: 35%;
+    border: 1px solid;
+    margin-top: 10px;
+    box-shadow: none;
+  }
+
+  .Buttons__WishList {
+    border-radius: 2px;
+    height: 40px;
+    border: 1px solid;
+    margin-top: 10px;
+    box-shadow: none;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
