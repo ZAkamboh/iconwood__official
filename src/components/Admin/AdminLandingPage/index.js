@@ -31,16 +31,14 @@ function Adminlandingpage() {
   const [value, setvalue] = useState(0)
 
   useEffect(() => {
-    auth.onAuthStateChanged((authUser) => {
-      console.log('THE USER IS >>> ', authUser)
+    // auth.onAuthStateChanged((authUser) => {
+    //   console.log('THE USER IS >>> ', authUser)
 
-      if (!authUser) {
-        // the user just logged in / the user was logged in
-        history.push('/Admin')
-      } else {
-        // the user is logged out
-      }
-    })
+    //   if (!authUser) {
+    //     history.push('/Admin')
+    //   } else {
+    //   }
+    // })
   }, [])
 
   const upload = () => {

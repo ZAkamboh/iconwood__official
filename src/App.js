@@ -11,6 +11,7 @@ import {
 
 import ViewProduct from './components/products/ViewProduct'
 import { Chairs, Sofas } from './components/products'
+import UserLogin from './components/Navbar/UserLogin'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -32,30 +33,23 @@ import { useStateValue } from './components/StateProvider'
 // context api and database End
 
 import './App.css'
-  function App() {
-  const [{ user }, dispatch] = useStateValue()
+function App() {
+  const [{ users }, dispatch] = useStateValue()
 
   useEffect(() => {
     // alert('Our Website Is Under Construction Now')
-
-    auth.onAuthStateChanged((authUser) => {
-      console.log('THE USER IS >>> ', authUser)
-
-      if (authUser) {
-        // the user just logged in / the user was logged in
-
-        dispatch({
-          type: 'SET_USER',
-          user: authUser,
-        })
-      } else {
-        // the user is logged out
-        dispatch({
-          type: 'SET_USER',
-          user: null,
-        })
-      }
-    })
+    var users = JSON.parse(localStorage.getItem('users'))
+    if (users) {
+      dispatch({
+        type: 'SET_USER',
+        payload: users,
+      })
+    } else {
+      dispatch({
+        type: 'SET_USER',
+        payload: null,
+      })
+    }
   }, [])
 
   return (
@@ -87,6 +81,10 @@ import './App.css'
             <LandingSection4 />
             <LandingSection5 />
             <Footer />
+          </Route>
+
+          <Route exact path="/User_Login">
+            <UserLogin />
           </Route>
 
           <Route exact path="/ViewProduct">

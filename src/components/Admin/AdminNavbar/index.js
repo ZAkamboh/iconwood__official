@@ -17,9 +17,7 @@ function AdminNavbar() {
     setstate(false)
   }
   const handleAuthenticaton = () => {
-    if (user) {
-      auth.signOut()
-    }
+  
   }
 
   return (
@@ -84,13 +82,13 @@ function AdminNavbar() {
           <div className="wishlist">
             Orders <div className="wishlistnumeric">0</div>
           </div>
-          <Link to={!user && '/Admin'}>
+          <Link to={'/Admin'}>
             <div onClick={handleAuthenticaton} className="nav-options-inner">
               <span
                 style={{ color: 'white', textDecoration: 'none' }}
                 className="optionTwo"
               >
-                {user ? 'Sign Out' : 'Sign In'}
+               Sign In
               </span>
             </div>
           </Link>

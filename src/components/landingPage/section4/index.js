@@ -13,8 +13,10 @@ import HeartWhite from '../../../assets/landingPage/icons/heartwhite.png'
 
 import Section1B from '../../../assets/landingPage/section2/section2b.jpg'
 import Section1C from '../../../assets/landingPage/section2/section2c.jpg'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+
 import { Link, useHistory } from 'react-router-dom'
-import Visibility from '@material-ui/icons/Visibility';
+import Visibility from '@material-ui/icons/Visibility'
 import { useStateValue } from '../../StateProvider'
 
 import './section4.css'
@@ -32,13 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function LandingSection4(props) {
-  const [{ section4Items }, dispatch] = useStateValue()
+  const [{ section4Items, wishlist,users }, dispatch] = useStateValue()
   const history = useHistory()
 
   const [viewproduct, setviewproduct] = useState(false)
-  const [wishlist, setwishlist] = useState(false)
-
   const [section4Data, setsection4Data] = useState([])
+  const [wishlistWithInFunc, setwishlistWithInFunc] = useState(false)
   const classes = useStyles()
 
   useEffect(() => {
@@ -48,7 +49,6 @@ function LandingSection4(props) {
       for (let keys in fetchData) {
         values.push({ ...fetchData[keys], key: keys })
       }
-      // setsection4Data([section4Data, ...values])
 
       dispatch({
         type: 'SECTION4_DATA',
@@ -64,42 +64,23 @@ function LandingSection4(props) {
       rate: item.rate,
       url: item.url,
       wishlist: true,
-      key:item.key
+      key: item.key,
     }
 
-    var wishlistArray = JSON.parse(localStorage.getItem("wishlist"));
-    var newArray = [];
+    var wishlistArray = JSON.parse(localStorage.getItem('wishlist'))
+    var newArray = []
     if (wishlistArray === null) {
-      newArray.push(wishlistData);
+      newArray.push(wishlistData)
+    } else {
+      newArray = wishlistArray
+      newArray.push(wishlistData)
     }
-    else {
-      newArray = wishlistArray ;
-      newArray.push(wishlistData);
-    }
-    localStorage.setItem("wishlist", JSON.stringify(newArray))
-      dispatch({
-      type: "ADD_TO_WISHLIST",
-      payload: newArray
+    localStorage.setItem('wishlist', JSON.stringify(newArray))
+
+    dispatch({
+      type: 'ADD_TO_WISHLIST',
+      payload: newArray,
     })
-
-
-    database
-      .ref(`Section4Data/${item.key}`)
-      .set(wishlistData)
-      .then(() => {
-        const UpdatedValues = []
-        database.ref(`Section4Data`).once('value', (snap) => {
-          const fetchUpdatedData = snap.val()
-          for (let keys in fetchUpdatedData) {
-            UpdatedValues.push({ ...fetchUpdatedData[keys], key: keys })
-          }
-
-          dispatch({
-            type: 'SECTION4_DATA',
-            payload: UpdatedValues,
-          })
-        })
-      })
   }
 
   const _handleWishlistFalse = (item) => {
@@ -111,121 +92,114 @@ function LandingSection4(props) {
       wishlist: false,
     }
 
+    var wishlistItems = JSON.parse(localStorage.getItem('wishlist'))
+    var newRemoveArray
 
+    if (wishlistItems) {
+      newRemoveArray = wishlistItems.filter((f, i) => f.key !== item.key)
+    } else {
+      newRemoveArray = wishlistItems
+    }
 
+    localStorage.setItem('wishlist', JSON.stringify(newRemoveArray))
 
-    var wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
-      var newRemoveArray ;
-
-      if (wishlistItems) {
-        newRemoveArray = wishlistItems.filter((f, i) => f.key !== item.key );
-      }
-      else {
-        newRemoveArray = wishlistItems;
-      }
-
-      
-      localStorage.setItem("wishlist",JSON.stringify(newRemoveArray))
-
-
-
-
-     dispatch({
-       type: 'REMOVE_FROM_BASKET',
-       payload: newRemoveArray,
+    dispatch({
+      type: 'REMOVE_FROM_BASKET',
+      payload: newRemoveArray,
     })
-
-
-
-
-
-
-
-    database
-      .ref(`Section4Data/${item.key}`)
-      .set(wishlistData)
-      .then(() => {
-        const UpdatedValues = []
-        database.ref(`Section4Data`).once('value', (snap) => {
-          const fetchUpdatedData = snap.val()
-          for (let keys in fetchUpdatedData) {
-            UpdatedValues.push({ ...fetchUpdatedData[keys], key: keys })
-          }
-
-          dispatch({
-            type: 'SECTION4_DATA',
-            payload: UpdatedValues,
-          })
-        })
-      })
   }
 
-
-  
-
+  var wishlistTrueArray = JSON.parse(localStorage.getItem('wishlist'))
+  const checkIfAdded = (key) => {
+    const checked =
+      wishlistTrueArray && wishlistTrueArray.filter((f) => f.key === key)
+    if (checked && checked.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        {section4Items.map((item, i) => {
-          return (
-            <Grid key={item} item xs={3}>
-              <Paper
-                onMouseOver={() => setviewproduct(true)}
-                onMouseLeave={() => setviewproduct(false)}
-                className={classes.paper}
-              >
-                <div>
-                  <div className="wishlistAndproductname">
-                    <div>{item.title}</div>
-                    <div className="wishlistIcon">
-                      {item.wishlist === false ? (
-                        <img
-                          onClick={() => _handleWishlistTrue(item)}
-                          src={HeartWhite}
-                          height="35%"
-                          width="35%"
-                        />
-                      ) : (
-                        <img
-                          onClick={() => _handleWishlistFalse(item)}
-                          src={HeartRed}
-                          height="20%"
-                          width="20%"
-                        />
+        {section4Items &&
+          section4Items.map((item, i) => {
+            return (
+              <Grid key={item} item xs={3}>
+                <Paper id="item__Wrapper" className={classes.paper}>
+                  <div>
+                    <div className="wishlistAndproductname">
+                      <div>{item.title}</div>
+
+                      <div className="wishlistIcon">
+                        {(checkIfAdded(item.key) && (
+                          <FavoriteBorderIcon
+                            onClick={() => _handleWishlistFalse(item)}
+                            style={{ color: 'red' }}
+                          />
+                        )) || (
+                          <FavoriteBorderIcon
+                            onClick={() => _handleWishlistTrue(item)}
+                          />
+                        )}
+                      </div>
+                      {viewproduct && (
+                        <div
+                          onClick={() =>
+                            history.push({
+                              pathname: `/ViewProduct`,
+                              state: { item: item },
+                            })
+                          }
+                          className="visibility"
+                        >
+                          <Visibility />
+                        </div>
                       )}
                     </div>
-                    {viewproduct && <div onClick={()=>history.push({pathname:`/ViewProduct`,state:{item:item}})} className="visibility"><Visibility/></div>}
-
-                  </div>
-                  <img onClick={()=>history.push({pathname:`/ViewProduct`,state:{item:item}})} src={item.url} width="100%" />
-                  <Fade bottom delay={1000}>
-                    <div>
-                      <div className="title">{item.title}</div>
-                      <div className="desc">{item.desc}</div>
-                      {!viewproduct && <div className="rate">{item.rate}</div>}
-                      {viewproduct === true && (
+                    <img
+                      onClick={() =>
+                        history.push({
+                          pathname: `/ViewProduct`,
+                          state: { item: item,users:users },
+                        })
+                      }
+                      src={item.url}
+                      width="100%"
+                    />
+                    <Fade bottom delay={1000}>
+                      <div>
+                        <div className="title">{item.title}</div>
+                        <div className="desc">{item.desc}</div>
+                        <div className="rate">{item.rate}</div>
                         <div className="viewProductandWishList__Main">
-                          <div onClick={()=>history.push({pathname:`${item.title}`})} > View Products</div>
+                          <div
+                            onClick={() =>
+                              history.push({ pathname: `${item.title}` })
+                            }
+                          >
+                            {' '}
+                            View Products
+                          </div>
                           <div style={{ color: 'grey' }}>
-                            {item.wishlist === false ? (
-                              <span onClick={() => _handleWishlistTrue(item)}>
-                                Add To Wishlist
-                              </span>
-                            ) : (
+                            {(checkIfAdded(item.key) && (
                               <span onClick={() => _handleWishlistFalse(item)}>
                                 Remove From Wishlist
+                              </span>
+                            )) || (
+                              <span onClick={() => _handleWishlistTrue(item)}>
+                                Add To Wishlist
                               </span>
                             )}
                           </div>
                         </div>
-                      )}
-                    </div>
-                  </Fade>
-                </div>
-              </Paper>
-            </Grid>
-          )
-        })}
+                      </div>
+                    </Fade>
+                  </div>
+                </Paper>
+              </Grid>
+            )
+          })}
       </Grid>
     </div>
   )

@@ -31,10 +31,19 @@
     margin-top: 15px;
     font-weight: 700;
     color:#e36c02;
-    display: flex;
     justify-content: space-between;
+    display: none;
+    opacity: 0;
+}
+#item__Wrapper:hover .viewProductandWishList__Main{
+    opacity: 1;
+    display: flex;
 }
 
+#item__Wrapper:hover .rate{
+    display: none;
+
+}
 .addtowishlist{
     border: 1px solid;
 }

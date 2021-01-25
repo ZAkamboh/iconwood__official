@@ -55,6 +55,8 @@ function ViewProduct() {
   const classes = useStyles()
   const location = useLocation()
   const items = location.state.item
+  const users = location.state.users
+
   const [color, setcolor] = useState(1)
 
   useEffect(() => {
@@ -73,7 +75,7 @@ function ViewProduct() {
         <Grid item xs={1}></Grid>
         <Grid item xs={5}>
           <Paper className={classes.paper}>
-            <img src={items.url} width="100%" />
+            <img src={items.url} width="70%" />
           </Paper>
         </Grid>
         <Grid item xs={4}>
