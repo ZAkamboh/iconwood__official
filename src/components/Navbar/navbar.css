@@ -85,3 +85,17 @@ background-color: #56574f;
     border-radius: 20px;
     font-weight: bold;
 }
+
+.orders{
+    display: flex;
+}
+
+.ordersnumeric{
+    margin-left: 8px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color:red
+}

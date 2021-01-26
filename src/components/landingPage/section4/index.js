@@ -143,19 +143,19 @@ function LandingSection4(props) {
                           />
                         )}
                       </div>
-                      {viewproduct && (
+
+                   
                         <div
                           onClick={() =>
                             history.push({
                               pathname: `/ViewProduct`,
-                              state: { item: item },
+                              state: { item: item,users:users},
                             })
                           }
                           className="visibility"
                         >
                           <Visibility />
                         </div>
-                      )}
                     </div>
                     <img
                       onClick={() =>

@@ -12,7 +12,7 @@ function LandingSection1() {
           <h1>home friendly?</h1>
           <p>LES’T IT MAKE. </p>
           <Typical
-          steps={['LES’T ', 1500, 'IT MAKE Consulting',1500,'IT MAKE IDEA',1500,'IT MAKE WORK',1500]}
+          steps={['LET’S ', 1500, 'IT MAKE Consulting',1500,'IT MAKE IDEA',1500,'IT MAKE WORK',1500]}
           loop={Infinity}
           wrapper="p"
         />

@@ -1,5 +1,6 @@
 export const initialState = {
   wishlist: [],
+  Userorders:[],
   section4Items: [],
   users: null,
 }
@@ -27,6 +28,12 @@ const reducer = (state, action) => {
         ...state,
         wishlist: action.payload,
       }
+
+      case 'SHOPNOW':
+        return {
+          ...state,
+          Userorders: action.payload,
+        }
 
     case "SET_USER":
       return {

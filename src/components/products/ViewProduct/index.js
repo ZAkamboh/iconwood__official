@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation,useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import HeartRed from '../../../assets/landingPage/icons/heart.png'
+import { useStateValue } from '../../StateProvider'
+import { auth,database } from '../../../database'
 
 import './viewproduct.css'
 
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    marginTop: '2%',
+    marginTop: '5%',
     marginBottom: '5%',
   },
   paper: {
@@ -52,10 +54,12 @@ theme.typography.h3 = {
 }
 
 function ViewProduct() {
+  const [{ users }, dispatch] = useStateValue()
+
   const classes = useStyles()
   const location = useLocation()
+  const history =useHistory()
   const items = location.state.item
-  const users = location.state.users
 
   const [color, setcolor] = useState(1)
 
@@ -68,6 +72,112 @@ function ViewProduct() {
     setcolor(val)
   }
 
+  const _handleWishlistTrue = (item) => {
+    var wishlistData = {
+      title: item.title,
+      desc: item.desc,
+      rate: item.rate,
+      url: item.url,
+      wishlist: true,
+      key: item.key,
+    }
+
+    var wishlistArray = JSON.parse(localStorage.getItem('wishlist'))
+    var newArray = []
+    if (wishlistArray === null) {
+      newArray.push(wishlistData)
+    } else {
+      newArray = wishlistArray
+      newArray.push(wishlistData)
+    }
+    localStorage.setItem('wishlist', JSON.stringify(newArray))
+
+    dispatch({
+      type: 'ADD_TO_WISHLIST',
+      payload: newArray,
+    })
+  }
+
+  const _handleWishlistFalse = (item) => {
+    const wishlistData = {
+      title: item.title,
+      desc: item.desc,
+      rate: item.rate,
+      url: item.url,
+      wishlist: false,
+    }
+
+    var wishlistItems = JSON.parse(localStorage.getItem('wishlist'))
+    var newRemoveArray
+
+    if (wishlistItems) {
+      newRemoveArray = wishlistItems.filter((f, i) => f.key !== item.key)
+    } else {
+      newRemoveArray = wishlistItems
+    }
+
+    localStorage.setItem('wishlist', JSON.stringify(newRemoveArray))
+
+    dispatch({
+      type: 'REMOVE_FROM_BASKET',
+      payload: newRemoveArray,
+    })
+  }
+
+  const shopNow = () => {
+    if(!users){
+         history.push('/User_Login')
+    }
+    else{
+      
+      var orderData = {
+        title: items.title,
+        desc: items.desc,
+        rate: items.rate,
+        url: items.url,
+        wishlist: items.wishlist,
+        key: items.key,
+        user:users
+      }
+      var key2 = Object.keys(users);
+      var vals = users[key2[0]];
+      database
+      .ref(`orders/${vals.id}`)
+      .push(orderData)
+      .then((res) => {
+        // var values = []
+        // database.ref(`orders/${vals.id}`).on('value', (snap) => {
+        //   var fetchData = snap.val()
+        //   for (let keys in fetchData) {
+        //     values.push({ ...fetchData[keys], key: keys })
+        //   }
+    
+        //   dispatch({
+        //     type: "SHOPNOW",
+        //     payload: values,
+        //   })
+      
+        // })
+     
+
+
+      })
+  
+    
+    }
+
+  }
+
+  var wishlistTrueArray = JSON.parse(localStorage.getItem('wishlist'))
+  const checkIfAdded = (key) => {
+    const checked =
+      wishlistTrueArray && wishlistTrueArray.filter((f) => f.key === key)
+    if (checked && checked.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -75,7 +185,7 @@ function ViewProduct() {
         <Grid item xs={1}></Grid>
         <Grid item xs={5}>
           <Paper className={classes.paper}>
-            <img src={items.url} width="70%" />
+            <img className="product__Image" src={items.url} />
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -91,14 +201,23 @@ function ViewProduct() {
               </Typography>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              <Typography className={classes.typography} variant="h6">
-                By clicking on the{' '}
-                <span style={{ color: '#000000' }}>Shop Now</span> button, A
-                form will appear to get your information. Then after you have
-                Submitted your information, it will be delivered to us. We will
-                call you for further details about the product like : <br />{' '}
-                (Sizes, Quantity, Wood, Texture etc.)
-              </Typography>
+              {!users ? (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button, A "LOGIN"
+                  form will appear to get your information. Then after you have
+                  Submitted your information, it will be delivered to us. We
+                  will call you for further details about the product like :{' '}
+                  <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              ) : (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button, We
+                  will call you for further details about the product like :{' '}
+                  <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              )}
             </ThemeProvider>
           </div>
           <div className="Buttons">
@@ -109,6 +228,7 @@ function ViewProduct() {
               }}
               onMouseOver={() => Selectcolor(1)}
               onMouseLeave={() => Selectcolor(false)}
+              onClick={shopNow}
               className="Buttons__shopNow"
             >
               <span>
@@ -128,20 +248,25 @@ function ViewProduct() {
               className="Buttons__WishList"
             >
               <span>
-                {items.wishlist === false ? (
+                {(checkIfAdded(items.key) && (
                   <FavoriteBorderIcon
-                    style={{ color: color === 2 ? 'white' : 'black' }}
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
                   />
-                ) : (
-                    <FavoriteBorderIcon
-                    style={{ color: "red" }}
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
                   />
                 )}
               </span>{' '}
-              {items.wishlist === false ? (
-                <span>Add To Wishlist</span>
-              ) : (
-                <span>Remove From Wishlist</span>
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
               )}
             </button>
           </div>

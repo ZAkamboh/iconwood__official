@@ -47,9 +47,18 @@
 .addtowishlist{
     border: 1px solid;
 }
-.visibility{
+
+.visibility {
     widows: 100%;
     margin-top: 15%;
     padding-left: 3px;
     cursor: pointer;
+    display: none;
+}
+#item__Wrapper:hover .visibility {
+    widows: 100%;
+    margin-top: 15%;
+    padding-left: 1px;
+    cursor: pointer;
+    display: block;
 }

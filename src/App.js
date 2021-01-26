@@ -11,6 +11,7 @@ import {
 
 import ViewProduct from './components/products/ViewProduct'
 import { Chairs, Sofas } from './components/products'
+import UserOrders from "./components/Userorders"
 import UserLogin from './components/Navbar/UserLogin'
 
 import Navbar from './components/Navbar'
@@ -34,7 +35,7 @@ import { useStateValue } from './components/StateProvider'
 
 import './App.css'
 function App() {
-  const [{ users }, dispatch] = useStateValue()
+  const [{ users, Userorders }, dispatch] = useStateValue()
 
   useEffect(() => {
     // alert('Our Website Is Under Construction Now')
@@ -50,7 +51,7 @@ function App() {
         payload: null,
       })
     }
-  }, [])
+  }, [ Userorders])
 
   return (
     <Router>
@@ -104,6 +105,11 @@ function App() {
             <Navbar />
             <Sofas />
           </Route>
+
+          <Route exact path="/User_Orders">
+          <Navbar />
+          <UserOrders />
+        </Route>
         </Switch>
       </div>
     </Router>
