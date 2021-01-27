@@ -10,6 +10,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import HeartRed from '../../../assets/landingPage/icons/heart.png'
 import { useStateValue } from '../../StateProvider'
 import { auth,database } from '../../../database'
+import axios from 'axios';
 
 import './viewproduct.css'
 
@@ -145,19 +146,21 @@ function ViewProduct() {
       .ref(`orders/${vals.id}`)
       .push(orderData)
       .then((res) => {
-        // var values = []
-        // database.ref(`orders/${vals.id}`).on('value', (snap) => {
-        //   var fetchData = snap.val()
-        //   for (let keys in fetchData) {
-        //     values.push({ ...fetchData[keys], key: keys })
-        //   }
-    
-        //   dispatch({
-        //     type: "SHOPNOW",
-        //     payload: values,
-        //   })
-      
-        // })
+        alert("order pushed")
+        // axios.post(`https://proton-server.herokuapp.com/data/Sagaformdata`, data)
+         axios.post(`http://localhost:8080/data/UserOrders`, orderData)
+          .then(res => {
+            alert("email send  our representative contact soon")
+
+            axios.post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
+            .then(res => {
+              alert("email send to admin")
+            })
+
+
+
+          })
+       
      
 
 

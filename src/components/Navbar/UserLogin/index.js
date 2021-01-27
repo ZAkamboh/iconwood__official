@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import './userlogin.css'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory,useLocation } from 'react-router-dom'
 import { auth, db, database } from '../../../database'
 import { useStateValue } from '../../StateProvider'
+import createBrowserHistory from "history/createBrowserHistory";
 
 function Login() {
   const history = useHistory()
+  const location=useLocation();
+  const customHistory = createBrowserHistory();
   const [email, setEmail] = useState('')
+  const [name, setname] = useState('')
   const [password, setPassword] = useState('')
   const [contact, setcontact] = useState('')
   const [inputSelector, setinputSelector] = useState('signIn')
   const [{ users }, dispatch] = useStateValue()
+  if(location.state === 'previousLocation'){
+    var PreviousLocation = location.state.previousLocation
+  var items = location.state.item
+  }
+ 
+
+
 
   const signIn = (e) => {
     setinputSelector('signIn')
+
     if (inputSelector === 'signIn') {
       e.preventDefault()
 
@@ -34,7 +46,18 @@ function Login() {
                 payload: null,
               })
             }
-            history.push('/')
+           
+            if(PreviousLocation){
+              history.push(PreviousLocation)
+              history.push({
+                pathname: `/PreviousLocation`,
+                state: {previousLocation: location.pathname,item:items},
+              })
+            }
+            else{
+              history.push('/')
+
+            }
           })
         })
         .catch((error) => alert(error.message))
@@ -46,7 +69,10 @@ function Login() {
 
     if (inputSelector === 'Register') {
       e.preventDefault()
-      if(contact === ''){
+      if(name === ''){
+        alert("Full Name is Required")
+      }
+     else if(contact === ''){
         alert("Contact Number is Required")
       }
    else{
@@ -57,6 +83,7 @@ function Login() {
       if (auth) {
         var userData = {
           id: auth.user.uid,
+          name:name,
           contact: contact,
           email: email,
         }
@@ -65,22 +92,36 @@ function Login() {
           .ref(`userData/${auth.user.uid}`)
           .push(userData)
           .then((res) => {
+            database.ref(`userData/${auth.user.uid}`).on('value', (snap) => {
+              localStorage.setItem('users', JSON.stringify(snap.val()))
+              var users = JSON.parse(localStorage.getItem('users'))
+              if (users) {
+                dispatch({
+                  type: 'SET_USER',
+                  payload: users,
+                })
+              } else {
+                dispatch({
+                  type: 'SET_USER',
+                  payload: null,
+                })
+              }
+             
+              if(PreviousLocation){
+                history.push(PreviousLocation)
+                history.push({
+                  pathname: `/PreviousLocation`,
+                  state: {previousLocation: location.pathname,item:items},
+                })
+              }
+              else{
+                history.push('/')
+  
+              }
+            })
           })
 
-        localStorage.setItem('users', JSON.stringify(userData))
-        var users = JSON.parse(localStorage.getItem('users'))
-        if (users) {
-          dispatch({
-            type: 'SET_USER',
-            payload: users,
-          })
-        } else {
-          dispatch({
-            type: 'SET_USER',
-            payload: null,
-          })
-        }
-        history.push('/')
+     
       }
     })
     .catch((error) => alert(error.message))
@@ -131,6 +172,12 @@ function Login() {
           <h1>Register</h1>
 
           <form>
+          <h5>Full Name</h5>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setname(e.target.value)}
+          />
             <h5>E-mail</h5>
             <input
               type="text"
