@@ -15,10 +15,8 @@ function Login() {
   const [contact, setcontact] = useState('')
   const [inputSelector, setinputSelector] = useState('signIn')
   const [{ users }, dispatch] = useStateValue()
-  if(location.state === 'previousLocation'){
-    var PreviousLocation = location.state.previousLocation
-  var items = location.state.item
-  }
+    var previousLocation = location.state==='previousLocation' && location.state.previousLocation
+  // var items = location.state.item
  
 
 
@@ -47,11 +45,10 @@ function Login() {
               })
             }
            
-            if(PreviousLocation){
-              history.push(PreviousLocation)
+            if(previousLocation){
               history.push({
-                pathname: `/PreviousLocation`,
-                state: {previousLocation: location.pathname,item:items},
+                pathname: `/previousLocation`,
+                state: {previousLocation: location.pathname},
               })
             }
             else{
@@ -107,11 +104,10 @@ function Login() {
                 })
               }
              
-              if(PreviousLocation){
-                history.push(PreviousLocation)
+              if(previousLocation){
                 history.push({
-                  pathname: `/PreviousLocation`,
-                  state: {previousLocation: location.pathname,item:items},
+                  pathname: `/previousLocation`,
+                  state: {previousLocation: location.pathname},
                 })
               }
               else{

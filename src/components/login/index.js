@@ -56,10 +56,8 @@ function Login() {
 
                 <button onClick={signIn} type='submit' className='login__signInButton'>Sign In</button>
             </form>
-
-         
-
-            <button disabled onClick={register} className='login__registerButton'>Create your Account</button>
+            <button  onClick={register} className='login__registerButton'>Create your Account</button>
+            
         </div>
     </div>
     )
