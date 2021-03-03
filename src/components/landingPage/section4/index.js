@@ -18,7 +18,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import { Link, useHistory } from 'react-router-dom'
 import Visibility from '@material-ui/icons/Visibility'
 import { useStateValue } from '../../StateProvider'
-
+import { Server } from "../../Services"
 import './section4.css'
 
 const useStyles = makeStyles((theme) => ({
@@ -63,10 +63,12 @@ function LandingSection4(props) {
       desc: item.desc,
       rate: item.rate,
       url: item.url,
+      url2:item.url2,
       wishlist: true,
       key: item.key,
-    }
+      trackingid:item.trackingid,
 
+    }
     var wishlistArray = JSON.parse(localStorage.getItem('wishlist'))
     var newArray = []
     if (wishlistArray === null) {
@@ -90,6 +92,8 @@ function LandingSection4(props) {
       rate: item.rate,
       url: item.url,
       wishlist: false,
+      trackingid:item.trackingid,
+
     }
 
     var wishlistItems = JSON.parse(localStorage.getItem('wishlist'))
@@ -146,24 +150,14 @@ function LandingSection4(props) {
 
                    
                         <div
-                          onClick={() =>
-                            history.push({
-                              pathname: `/ViewProduct`,
-                              state: { item: item,users:users},
-                            })
-                          }
+                          onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}
                           className="visibility"
                         >
                           <Visibility />
                         </div>
                     </div>
                     <img
-                      onClick={() =>
-                        history.push({
-                          pathname: `/ViewProduct`,
-                          state: { item: item,users:users },
-                        })
-                      }
+                        onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}
                       src={item.url}
                       width="100%"
                     />

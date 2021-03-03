@@ -2,11 +2,60 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useStateValue } from '../../StateProvider'
-import { auth } from '../../../database'
+import { auth,database } from '../../../database'
 
 import { Drawer, Button, Radio, Space } from 'antd'
 import './adminnavbar.css'
 function AdminNavbar() {
+  const history = useHistory()
+
+  useEffect(() => {
+
+    var ADMIN = JSON.parse(localStorage.getItem('ADMIN'))
+      if (!ADMIN) {
+        history.push('/Admin')
+      } 
+
+      var values = []
+      database.ref('orders').on('value', (snap) => {
+        var fetchData = snap.val()
+  
+        for (let keys in fetchData) {
+          values.push({ ...fetchData[keys], key: keys })
+        }
+    
+        
+        
+        dispatch({
+          type: "ALLORDERS",
+          payload: values,
+        })
+
+      })
+
+      var allUsers = []
+      database.ref('userData').on('value', (snap2) => {
+        var fetchData2 = snap2.val()
+  
+        for (let keys2 in fetchData2) {
+          allUsers.push({ ...fetchData2[keys2], key: keys2 })
+        }
+    
+        
+        
+        dispatch({
+          type: "ALLUSERS",
+          payload: allUsers,
+        })
+
+      })
+
+
+
+
+  
+   
+  }, [])
   const [{ basket, user }, dispatch] = useStateValue()
 
   const [state, setstate] = useState(0)
@@ -17,7 +66,11 @@ function AdminNavbar() {
     setstate(false)
   }
   const handleAuthenticaton = () => {
-  
+    var logout=localStorage.removeItem("ADMIN");
+    if(logout){
+      history.push('/Admin')
+
+    }
   }
 
   return (
@@ -79,8 +132,10 @@ function AdminNavbar() {
       </div>
       <div className="Navbar__cart__wishlist">
         <div className="Navbar__cart__wishlist__inner">
-          <div className="wishlist">
-            Orders <div className="wishlistnumeric">0</div>
+          <div onClick={()=>history.push('/allOrders')} className="wishlist">
+         
+          Orders <div className="wishlistnumeric">0</div>
+      
           </div>
           <Link to={'/Admin'}>
             <div onClick={handleAuthenticaton} className="nav-options-inner">
@@ -88,7 +143,7 @@ function AdminNavbar() {
                 style={{ color: 'white', textDecoration: 'none' }}
                 className="optionTwo"
               >
-               Sign In
+               Log Out
               </span>
             </div>
           </Link>

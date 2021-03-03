@@ -4,6 +4,8 @@ export const initialState = {
   section4Items: [],
   users: null,
   viewProducImage:[],
+  allorders:[],
+  allusers:[]
 }
 
 // Selector
@@ -35,6 +37,19 @@ const reducer = (state, action) => {
           ...state,
           Userorders: action.payload,
         }
+
+        case 'ALLORDERS':
+          return {
+            ...state,
+            allorders: action.payload,
+          }
+
+          case 'ALLUSERS':
+            return {
+              ...state,
+              allusers: action.payload,
+            }
+          
         
         case 'PRODUCT_IMAGE':
           return {

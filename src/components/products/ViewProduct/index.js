@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    marginTop: '5%',
     marginBottom: '5%',
+    paddingTop:"2%"
   },
   paper: {
     padding: theme.spacing(2),
@@ -59,12 +59,11 @@ theme.typography.h3 = {
 }
 
 function ViewProduct() {
-  const [{ users }, dispatch] = useStateValue()
-
+  const [{ users, }, dispatch] = useStateValue()
+  const [section4Items,setsection4Items] = useState([])
   const classes = useStyles()
   const location = useLocation()
   const history = useHistory()
-  const items = location.state.item
 
   const [color, setcolor] = useState(1)
   var initialValue = []
@@ -75,8 +74,15 @@ function ViewProduct() {
   useEffect(() => {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
+    var values = []
+    database.ref(`Section4Data`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values.push({ ...fetchData[keys], key: keys })
+      }
 
-
+      setsection4Items(values)
+    })
 
 
   }, [])
@@ -95,6 +101,7 @@ function ViewProduct() {
       url: item.url,
       wishlist: true,
       key: item.key,
+      trackingid:item.trackingid,
     }
 
     var wishlistArray = JSON.parse(localStorage.getItem('wishlist'))
@@ -120,6 +127,7 @@ function ViewProduct() {
       rate: item.rate,
       url: item.url,
       wishlist: false,
+      trackingid:item.trackingid,
     }
 
     var wishlistItems = JSON.parse(localStorage.getItem('wishlist'))
@@ -139,25 +147,28 @@ function ViewProduct() {
     })
   }
 
-  const shopNow = () => {
+  const shopNow = (i) => {
     if (!users) {
       
       history.push({
         pathname: `/User_Login`,
-        state: {previousLocation: location.pathname,item:items},
       })
     } 
     
     else {
       var orderData = {
-        title: items.title,
-        desc: items.desc,
-        rate: items.rate,
-        url: items.url,
-        wishlist: items.wishlist,
-        key: items.key,
+        
+        title: i.title,
+        desc: i.desc,
+        rate: i.rate,
+        url: i.url,
+        wishlist: i.wishlist,
+        key: i.key,
         user: users,
+        trackingid:i.trackingid,
+        status:"Pending"
       }
+
       var key2 = Object.keys(users)
       var vals = users[key2[0]]
       database
@@ -165,7 +176,6 @@ function ViewProduct() {
         .push(orderData)
         .then((res) => {
           alert('order pushed')
-          // axios.post(`https://proton-server.herokuapp.com/data/Sagaformdata`, data)
           axios
             .post(`http://localhost:8080/data/UserOrders`, orderData)
             .then((res) => {
@@ -192,15 +202,25 @@ function ViewProduct() {
     }
   }
 
+  var p = window.location.search;
+        var productid = p.split("=");
+        var productId = productid[1] 
+
+
+  
   return (
     <div>
+
+   {section4Items.map((items,i)=>{
+     return(
+      items.key === productId &&
       <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={5}>
-         
-              <Carousel
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={5}>
+       
+        <Carousel
               indicators={false}
               nextIcon={
                 <div className="nextIcon">
@@ -245,96 +265,101 @@ function ViewProduct() {
               }
 
             </Carousel>
-       
-          </Grid>
-          <Grid item xs={4}>
-            <div className={classes.detail}>
-              <ThemeProvider theme={theme}>
-                <Typography className={classes.typography} variant="h4">
-                  {items.desc}
-                </Typography>
-              </ThemeProvider>
-              <ThemeProvider theme={theme}>
-                <Typography className={classes.typography} variant="h5">
-                  {items.rate}
-                </Typography>
-              </ThemeProvider>
-              <ThemeProvider theme={theme}>
-                {!users ? (
-                  <Typography className={classes.typography} variant="h6">
-                    By clicking on the{' '}
-                    <span style={{ color: '#000000' }}>Shop Now</span> button, A
-                    "LOGIN" form will appear to get your information. Then after
-                    you have Submitted your information, it will be delivered to
-                    us. We will call you for further details about the product
-                    like : <br /> (Sizes, Quantity, Wood, Texture etc.)
-                  </Typography>
-                ) : (
-                  <Typography className={classes.typography} variant="h6">
-                    By clicking on the{' '}
-                    <span style={{ color: '#000000' }}>Shop Now</span> button,
-                    We will call you for further details about the product like
-                    : <br /> (Sizes, Quantity, Wood, Texture etc.)
-                  </Typography>
-                )}
-              </ThemeProvider>
-            </div>
-            <div className="Buttons">
-              <button
-                style={{
-                  backgroundColor: color === 1 ? 'black' : '',
-                  color: color === 1 ? 'white' : 'black',
-                }}
-                onMouseOver={() => Selectcolor(1)}
-                onMouseLeave={() => Selectcolor(false)}
-                onClick={shopNow}
-                className="Buttons__shopNow"
-              >
-                <span>
-                  <ShoppingCartIcon
-                    style={{ color: color === 1 ? 'white' : 'black' }}
-                  />
-                </span>{' '}
-                Shop Now
-              </button>
-              <button
-                style={{
-                  backgroundColor: color === 2 ? 'black' : '',
-                  color: color === 2 ? 'white' : 'black',
-                }}
-                onMouseOver={() => Selectcolor(2)}
-                onMouseLeave={() => Selectcolor(false)}
-                className="Buttons__WishList"
-              >
-                <span>
-                  {(checkIfAdded(items.key) && (
-                    <FavoriteBorderIcon
-                      onClick={() => _handleWishlistFalse(items)}
-                      style={{ color: 'red' }}
-                    />
-                  )) || (
-                    <FavoriteBorderIcon
-                      onClick={() => _handleWishlistTrue(items)}
-                    />
-                  )}
-                </span>{' '}
-                {(checkIfAdded(items.key) && (
-                  <span onClick={() => _handleWishlistFalse(items)}>
-                    Remove From Wishlist
-                  </span>
-                )) || (
-                  <span onClick={() => _handleWishlistTrue(items)}>
-                    Add To Wishlist
-                  </span>
-                )}
-              </button>
-            </div>
-          </Grid>
-
-          <Grid item xs={1}></Grid>
+     
         </Grid>
-      </div>
+        <Grid item xs={4}>
+          <div className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography className={classes.typography} variant="h4">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography className={classes.typography} variant="h5">
+                {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              {!users ? (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button, A
+                  "LOGIN" form will appear to get your information. Then after
+                  you have Submitted your information, it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              ) : (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button,
+                  We will call you for further details about the product like
+                  : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              )}
+            </ThemeProvider>
+          </div>
+          <div className="Buttons">
+            <button
+              style={{
+                backgroundColor: color === 1 ? 'black' : '',
+                color: color === 1 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(1)}
+              onMouseLeave={() => Selectcolor(false)}
+              onClick={()=>shopNow(items)}
+              className="Buttons__shopNow"
+            >
+              <span>
+                <ShoppingCartIcon
+                  style={{ color: color === 1 ? 'white' : 'black' }}
+                />
+              </span>{' '}
+              Shop Now
+            </button>
+            <button
+              style={{
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(2)}
+              onMouseLeave={() => Selectcolor(false)}
+              className="Buttons__WishList"
+            >
+              <span>
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
+              </span>{' '}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
+            </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
     </div>
+
+     )
+   })}
+ 
+     
+  </div>
   )
 }
 

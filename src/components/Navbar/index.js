@@ -31,15 +31,13 @@ function Navbar() {
       localStorage.getItem('users'),
     )
     if(usersfromlocalstorage){
-      var key2 = Object.keys(usersfromlocalstorage);
-      var vals = usersfromlocalstorage[key2[0]];
+      // alert(usersfromlocalstorage.id)
       var values = []
-      database.ref(`orders/${vals.id}`).on('value', (snap) => {
+      database.ref(`orders/${usersfromlocalstorage.id}`).on('value', (snap) => {
         var fetchData = snap.val()
         for (let keys in fetchData) {
           values.push({ ...fetchData[keys], key: keys })
         }
-  
         dispatch({
           type: "SHOPNOW",
           payload: values,
@@ -126,7 +124,7 @@ function Navbar() {
       </div>
       <div className="Navbar__cart__wishlist">
         <div className="Navbar__cart__wishlist__inner">
-          <div className="wishlist">
+          <div  onClick={() => history.push('/wishlist')} className="wishlist">
             Wishlist{' '}
             <div className="wishlistnumeric">
               {wishlist === null ? 0 : wishlist.length}

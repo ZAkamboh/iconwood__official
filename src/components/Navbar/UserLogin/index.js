@@ -45,6 +45,7 @@ function Login() {
               })
             }
            
+
             if(previousLocation){
               history.push({
                 pathname: `/previousLocation`,
@@ -56,6 +57,8 @@ function Login() {
 
             }
           })
+
+          
         })
         .catch((error) => alert(error.message))
     }
@@ -87,7 +90,7 @@ function Login() {
       
         database
           .ref(`userData/${auth.user.uid}`)
-          .push(userData)
+          .set(userData)
           .then((res) => {
             database.ref(`userData/${auth.user.uid}`).on('value', (snap) => {
               localStorage.setItem('users', JSON.stringify(snap.val()))

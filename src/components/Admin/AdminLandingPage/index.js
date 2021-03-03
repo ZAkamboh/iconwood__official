@@ -31,14 +31,13 @@ function Adminlandingpage() {
   const [value, setvalue] = useState(0)
 
   useEffect(() => {
-    // auth.onAuthStateChanged((authUser) => {
-    //   console.log('THE USER IS >>> ', authUser)
 
-    //   if (!authUser) {
-    //     history.push('/Admin')
-    //   } else {
-    //   }
-    // })
+    var ADMIN = JSON.parse(localStorage.getItem('ADMIN'))
+      if (!ADMIN) {
+        history.push('/Admin')
+      } 
+      
+   
   }, [])
 
   const upload = () => {
@@ -76,7 +75,8 @@ function Adminlandingpage() {
         rate:rate,
         url: imageUrl,
         wishlist:false,
-        viewproduct:false
+        viewproduct:false,
+        trackingid:Math.floor(Math.random() * 100000000000000)
       }
       if (data.title === "") {
         alert("title field is required")
@@ -119,7 +119,7 @@ function Adminlandingpage() {
 
     })
 
-    history.replace('/')
+    history.replace('/AdminHome')
 
         })
         .catch(error => {

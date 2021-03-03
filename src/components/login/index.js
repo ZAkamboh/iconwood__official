@@ -10,33 +10,22 @@ function Login() {
     const [password, setPassword] = useState('');
 
     const signIn = e => {
-        e.preventDefault();
+        var adminLoginData = {
+            email: email,
+            password: password,
+          }
+           if(email === "admin.iconwood@gmail.com" && password === "Bmw200akf1619"){
+            localStorage.setItem('ADMIN', JSON.stringify(adminLoginData))
+             history.push('/AdminHome')
+           }
+           else{
+               alert("Invalid Login Details")
+           }
 
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .then(auth => {
-                localStorage.setItem('users', JSON.stringify(auth))
-                history.push('/')
-            })
-            .catch(error => alert(error.message))
     }
 
 
-    const register = e => {
-
-        e.preventDefault();
-
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((auth) => {
-                // it successfully created a new user with email and password
-                if (auth) {
-                    localStorage.setItem('users', JSON.stringify(auth))
-                    history.push('/')
-                }
-            })
-            .catch(error => alert(error.message))
-    }
+    
 
     return (
         <div className='login'>
@@ -47,16 +36,13 @@ function Login() {
         <div className='login__container'>
             <h1>Sign-in</h1>
 
-            <form>
                 <h5>E-mail</h5>
                 <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
 
                 <h5>Password</h5>
                 <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
 
-                <button onClick={signIn} type='submit' className='login__signInButton'>Sign In</button>
-            </form>
-            <button  onClick={register} className='login__registerButton'>Create your Account</button>
+                <button style={{color:"white"}} onClick={(e)=>signIn(e)} type='submit' className='login__signInButton'>Sign In</button>
             
         </div>
     </div>

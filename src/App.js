@@ -13,7 +13,7 @@ import ViewProduct from './components/products/ViewProduct'
 import { Chairs, Sofas } from './components/products'
 import UserOrders from "./components/Userorders"
 import UserLogin from './components/Navbar/UserLogin'
-
+import Wishlist from "./components/wishlistComponent"
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
@@ -23,7 +23,7 @@ import Login from './components/login'
 import AdminNavbar from './components/Admin/AdminNavbar'
 import AdminHome from './components/Admin/AdminHome'
 import Adminlandingpage from './components/Admin/AdminLandingPage'
-
+import Allorders from "./components/Admin/allAdminOrders"
 // admin Panel Routes End
 
 // context api and database
@@ -59,7 +59,6 @@ function App() {
         <Switch>
           <Route exact path="/Admin">
             <Login />
-            <Footer />
           </Route>
 
           <Route exact path="/AdminHome">
@@ -70,6 +69,11 @@ function App() {
           <Route exact path="/Landingpage">
             <AdminNavbar />
             <Adminlandingpage />
+          </Route>
+
+          <Route exact path="/allOrders">
+            <AdminNavbar />
+            <Allorders />
           </Route>
 
           <Route exact path="/">
@@ -96,6 +100,15 @@ function App() {
             <Footer />
           </Route>
 
+          <Route exact path="/wishlist">
+            <div className="navbar__app">
+              <Navbar />
+            </div>
+            <Wishlist />
+            <Footer />
+          </Route>
+
+
           <Route exact path="/chair">
             <Navbar />
             <Chairs />
@@ -107,8 +120,12 @@ function App() {
           </Route>
 
           <Route exact path="/User_Orders">
-          <Navbar />
-          <UserOrders />
+          <div className="navbar__app">
+              <Navbar />
+            </div>
+            <UserOrders />
+            <Footer />
+
         </Route>
         </Switch>
       </div>

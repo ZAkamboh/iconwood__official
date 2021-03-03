@@ -8,14 +8,13 @@ function AdminHome() {
   const history = useHistory()
 
   useEffect(() => {
-    auth.onAuthStateChanged((authUser) => {
 
-      if (!authUser) {
+    var ADMIN = JSON.parse(localStorage.getItem('ADMIN'))
+      if (!ADMIN) {
         history.push('/Admin')
-      } else {
-        // the user is logged out
-      }
-    })
+      } 
+      
+   
   }, [])
   return (
     <div className="admin_home_Main">
