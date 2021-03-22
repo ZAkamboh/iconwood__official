@@ -16,6 +16,7 @@ import UserLogin from './components/Navbar/UserLogin'
 import Wishlist from "./components/wishlistComponent"
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import Contact from "./components/contact"
 
 // admin Panel Routes
 
@@ -106,6 +107,15 @@ function App() {
             </div>
             <Wishlist />
             <Footer />
+          </Route>
+
+
+          <Route exact path="/contact">
+            <div className="navbar__app">
+              <Navbar />
+            </div>
+            <Contact />
+            {/* <Footer /> */}
           </Route>
 
 

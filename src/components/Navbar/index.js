@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react'
 import { useStateValue } from '../StateProvider'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import {auth,database} from "../../database"
+import axios from 'axios'
 
 function Navbar() {
   const history = useHistory()
   const location = useLocation()
-  const [{ wishlist,Userorders,users }, dispatch] = useStateValue()
+  const [{ wishlist,Userorders,users,allorders }, dispatch] = useStateValue()
 
   useEffect(() => {
     var wishlistdatafromlocalstorage = JSON.parse(
@@ -31,23 +32,22 @@ function Navbar() {
       localStorage.getItem('users'),
     )
     if(usersfromlocalstorage){
-      // alert(usersfromlocalstorage.id)
-      var values = []
-      database.ref(`orders/${usersfromlocalstorage.id}`).on('value', (snap) => {
-        var fetchData = snap.val()
-        for (let keys in fetchData) {
-          values.push({ ...fetchData[keys], key: keys })
-        }
-        dispatch({
-          type: "SHOPNOW",
-          payload: values,
-        })
     
+      axios
+      .post(`http://localhost:8080/data/getUserOrders/${usersfromlocalstorage._id}` )
+      .then((res) => {
+       dispatch({
+          type: "SHOPNOW",
+          payload:res.data.order
+        })
       })
+        
+    
+    
 
     }
   
-  }, [Userorders])
+  }, [])
 
 
   const [state, setstate] = useState(0)
@@ -67,6 +67,8 @@ function Navbar() {
       type: 'SET_USER',
       payload: null,
     })
+    
+    history.push('/')
     
   }
   return (
@@ -103,9 +105,10 @@ function Navbar() {
             360 Views
           </div>
           <div
+            onClick={() => controlling('/contact')}
             onMouseOver={() => forbottomborder(4)}
             onMouseLeave={forhiddenBorder}
-            className={state === 4 ? 'borderBottom' : 'borderBottomHidden'}
+            className={state === 4 || location.pathname === '/contact' ? 'borderBottom' : 'borderBottomHidden'}
           >
             Contact Us
           </div>
@@ -116,7 +119,7 @@ function Navbar() {
             onMouseLeave={forhiddenBorder}
             className={state === 5 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <div className="orders">Your Orders <div className="ordersnumeric"> {Userorders === null ? 0 : Userorders.length}</div></div> 
+          <div className="orders">Your Orders <div className="ordersnumeric"> {Userorders === null ? 0 :  Userorders.length}</div></div> 
           </div>
           }
         

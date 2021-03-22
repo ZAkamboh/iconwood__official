@@ -42,10 +42,10 @@ function LandingSection3() {
     <Grid item xs={12}>
       <Paper className={classes.paper}>
         <div className="section3__Main">
-          <h1>
-            Icon Wood® is a curation of <br />
-            minimalist styles that inspire us.
-          </h1>
+          <h2>
+           Make the best choice of furniture <br /> to look your home decent. <br />
+IconWood gives you the premium range of decent look furniture.
+          </h2>
           <Fade bottom delay={1000}>
           <div className="section3__Icons">
           <div className="section3__Icons__inner">

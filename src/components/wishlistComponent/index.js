@@ -62,7 +62,7 @@ theme.typography.h3 = {
 }
 
 function Wishlist() {
-  const [{ users, wishlist }, dispatch] = useStateValue()
+  const [{ users, wishlist, Userorders }, dispatch] = useStateValue()
   const [section4Items, setsection4Items] = useState([])
   const classes = useStyles()
   const location = useLocation()
@@ -72,11 +72,15 @@ function Wishlist() {
   var initialValue = []
 
   var ImagesArray = []
-
-
   useEffect(() => {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
+   
+
+  }, [])
+
+  useEffect(() => {
+   
     var values = []
     database.ref(`Section4Data`).once('value', (snap) => {
       var fetchData = snap.val()
@@ -86,9 +90,26 @@ function Wishlist() {
 
       setsection4Items(values)
     })
+    var usersfromlocalstorage = JSON.parse(
+      localStorage.getItem('users'),
+    )
+    if (usersfromlocalstorage) {
+
+      axios
+        .post(`http://localhost:8080/data/getUserOrders/${usersfromlocalstorage._id}`)
+        .then((res) => {
+          dispatch({
+            type: "SHOPNOW",
+            payload: res.data.order
+          })
+        })
 
 
-  }, [])
+
+
+    }
+
+  }, [Userorders])
 
 
 
@@ -160,23 +181,25 @@ function Wishlist() {
 
     else {
       var orderData = {
-        trackingid: i.trackingid,
-        status: "Pending",
         title: i.title,
         desc: i.desc,
         rate: i.rate,
         url: i.url,
         wishlist: i.wishlist,
         key: i.key,
-        user: users,
+        userId: users._id,
+        username:users.name,
+        useremail:users.email,
+        usercontact:users.contact,
+        trackingid:Math.floor(Math.random() * 100000000000000),
+        status: "Pending",
+        orderDate: new Date().toLocaleDateString('de-DE'),
       }
-
-
-      database
-        .ref(`orders/${users.id}`)
-        .push(orderData)
+      axios
+        .post(`http://localhost:8080/data/UserOrders`, orderData)
         .then((res) => {
-
+          alert("succussfully order done")
+          
           const wishlistRemoveData = {
             title: i.title,
             desc: i.desc,
@@ -202,21 +225,40 @@ function Wishlist() {
             type: 'REMOVE_FROM_BASKET',
             payload: newRemoveArray2,
           })
-          alert('order pushed')
-          axios
-            .post(`http://localhost:8080/data/UserOrders`, orderData)
-            .then((res) => {
-              alert('email send  our representative contact soon')
+          // axios
+          //   .post(`http://localhost:8080/data/UserOrders`, orderData)
+          //   .then((res) => {
+          //     alert('email send  our representative contact soon')
 
-              axios
-                .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
-                .then((res) => {
-                  alert('email send to admin')
-                })
-            })
+          //     axios
+          //       .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
+          //       .then((res) => {
+          //         alert('email send to admin')
+          //       })
+          //   })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         })
+   
     }
+
   }
+
 
   var wishlistTrueArray = JSON.parse(localStorage.getItem('wishlist'))
   const checkIfAdded = (key) => {
@@ -238,7 +280,7 @@ function Wishlist() {
   return (
     <div>
 
-      {wishlist && wishlist.length === 0 ? <div style={{ height: "350px", justifyContent: "center", alignItems: "center", display: "flex" }}><h1>No Item In Wishlist</h1></div> : wishlist && wishlist.map((items, i) => {
+      {wishlist && wishlist.length === 0 || !wishlist  ? <div style={{ height: "350px", justifyContent: "center", alignItems: "center", display: "flex" }}><h1>No Item In Wishlist</h1></div> : wishlist && wishlist.map((items, i) => {
         return (
           <div className={classes.root}>
             <Grid container spacing={3}>

@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useStateValue } from '../../StateProvider'
 import { auth,database } from '../../../database'
+import axios from 'axios'
 
 import { Drawer, Button, Radio, Space } from 'antd'
 import './adminnavbar.css'
 function AdminNavbar() {
   const history = useHistory()
+  const [{ basket, user,allorders  }, dispatch] = useStateValue()
 
   useEffect(() => {
 
@@ -16,47 +18,18 @@ function AdminNavbar() {
         history.push('/Admin')
       } 
 
-      var values = []
-      database.ref('orders').on('value', (snap) => {
-        var fetchData = snap.val()
-  
-        for (let keys in fetchData) {
-          values.push({ ...fetchData[keys], key: keys })
-        }
     
-        
-        
+      axios
+      .get(`http://localhost:8080/data/getUserAllOrdersAdmin`)
+      .then((res) => {
         dispatch({
           type: "ALLORDERS",
-          payload: values,
+          payload: res.data.Allorder
         })
-
       })
 
-      var allUsers = []
-      database.ref('userData').on('value', (snap2) => {
-        var fetchData2 = snap2.val()
-  
-        for (let keys2 in fetchData2) {
-          allUsers.push({ ...fetchData2[keys2], key: keys2 })
-        }
-    
-        
-        
-        dispatch({
-          type: "ALLUSERS",
-          payload: allUsers,
-        })
-
-      })
-
-
-
-
-  
    
-  }, [])
-  const [{ basket, user }, dispatch] = useStateValue()
+  }, [allorders])
 
   const [state, setstate] = useState(0)
   const forbottomborder = (value) => {
@@ -134,7 +107,7 @@ function AdminNavbar() {
         <div className="Navbar__cart__wishlist__inner">
           <div onClick={()=>history.push('/allOrders')} className="wishlist">
          
-          Orders <div className="wishlistnumeric">0</div>
+          Orders <div className="wishlistnumeric">{allorders === null ? 0 : allorders.length}</div>
       
           </div>
           <Link to={'/Admin'}>

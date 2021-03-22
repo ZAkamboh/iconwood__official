@@ -2,6 +2,10 @@ export const initialState = {
   wishlist: [],
   Userorders:[],
   section4Items: [],
+  section5Items: [],
+  section1Items: [],
+  section2Items: [],
+
   users: null,
   viewProducImage:[],
   allorders:[],
@@ -19,6 +23,24 @@ const reducer = (state, action) => {
         ...state,
         section4Items: action.payload,
       }
+
+
+      case 'SECTION1_DATA':
+        return {
+          ...state,
+          section1Items: action.payload,
+        }
+        case 'SECTION2_DATA':
+          return {
+            ...state,
+            section2Items: action.payload,
+          }
+
+      case 'SECTION5_DATA':
+        return {
+          ...state,
+          section5Items: action.payload,
+        }
 
     case 'ADD_TO_WISHLIST':
       return {

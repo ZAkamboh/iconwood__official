@@ -55,7 +55,7 @@ function LandingSection4(props) {
         payload: values,
       })
     })
-  }, [])
+  }, [section4Items])
 
   const _handleWishlistTrue = (item) => {
     var wishlistData = {

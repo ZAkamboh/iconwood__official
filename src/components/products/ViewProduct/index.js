@@ -149,46 +149,90 @@ function ViewProduct() {
 
   const shopNow = (i) => {
     if (!users) {
-      
+
       history.push({
         pathname: `/User_Login`,
       })
-    } 
-    
+    }
+
     else {
       var orderData = {
-        
         title: i.title,
         desc: i.desc,
         rate: i.rate,
         url: i.url,
         wishlist: i.wishlist,
         key: i.key,
-        user: users,
-        trackingid:i.trackingid,
-        status:"Pending"
+        userId: users._id,
+        username:users.name,
+        useremail:users.email,
+        usercontact:users.contact,
+        trackingid:Math.floor(Math.random() * 100000000000000),
+        status: "Pending",
+        orderDate: new Date().toLocaleDateString('de-DE'),
       }
-
-      var key2 = Object.keys(users)
-      var vals = users[key2[0]]
-      database
-        .ref(`orders/${vals.id}`)
-        .push(orderData)
+      axios
+        .post(`http://localhost:8080/data/UserOrders`, orderData)
         .then((res) => {
-          alert('order pushed')
-          axios
-            .post(`http://localhost:8080/data/UserOrders`, orderData)
-            .then((res) => {
-              alert('email send  our representative contact soon')
+          alert("succussfully order done")
+          
+          const wishlistRemoveData = {
+            title: i.title,
+            desc: i.desc,
+            rate: i.rate,
+            url: i.url,
+            wishlist: false,
+            key: i.key,
+            trackingid: i.trackingid,
+          }
 
-              axios
-                .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
-                .then((res) => {
-                  alert('email send to admin')
-                })
-            })
+          var wishlistItems2 = JSON.parse(localStorage.getItem('wishlist'))
+          var newRemoveArray2
+
+          if (wishlistItems2) {
+            newRemoveArray2 = wishlistItems2.filter((f, index) => f.key !== i.key)
+          } else {
+            newRemoveArray2 = wishlistItems2
+          }
+
+          localStorage.setItem('wishlist', JSON.stringify(newRemoveArray2))
+
+          dispatch({
+            type: 'REMOVE_FROM_BASKET',
+            payload: newRemoveArray2,
+          })
+          // axios
+          //   .post(`http://localhost:8080/data/UserOrders`, orderData)
+          //   .then((res) => {
+          //     alert('email send  our representative contact soon')
+
+          //     axios
+          //       .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
+          //       .then((res) => {
+          //         alert('email send to admin')
+          //       })
+          //   })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         })
+   
     }
+
   }
 
   var wishlistTrueArray = JSON.parse(localStorage.getItem('wishlist'))

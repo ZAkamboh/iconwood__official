@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import './userlogin.css'
-import { Link, useHistory,useLocation } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { auth, db, database } from '../../../database'
 import { useStateValue } from '../../StateProvider'
 import createBrowserHistory from "history/createBrowserHistory";
+import axios from 'axios'
 
 function Login() {
   const history = useHistory()
-  const location=useLocation();
+  const location = useLocation();
   const customHistory = createBrowserHistory();
   const [email, setEmail] = useState('')
   const [name, setname] = useState('')
@@ -15,9 +16,9 @@ function Login() {
   const [contact, setcontact] = useState('')
   const [inputSelector, setinputSelector] = useState('signIn')
   const [{ users }, dispatch] = useStateValue()
-    var previousLocation = location.state==='previousLocation' && location.state.previousLocation
+  var previousLocation = location.state === 'previousLocation' && location.state.previousLocation
   // var items = location.state.item
- 
+
 
 
 
@@ -26,12 +27,28 @@ function Login() {
 
     if (inputSelector === 'signIn') {
       e.preventDefault()
+      if (email === "") {
+        alert("Enter Email")
+      }
+      else if (password === "") {
+        alert("Enter Password")
+      }
 
-      auth
-        .signInWithEmailAndPassword(email, password)
-        .then((auth) => {
-          database.ref(`userData/${auth.user.uid}`).on('value', (snap) => {
-            localStorage.setItem('users', JSON.stringify(snap.val()))
+      var loginData = {
+        email: email,
+        password: password,
+      }
+      axios
+        .post(`http://localhost:8080/data/login`, loginData)
+        .then((res) => {
+
+          if (res.data.success !== true) {
+            alert(JSON.stringify(res.data.error))
+          }
+
+
+          else {
+            localStorage.setItem('users', JSON.stringify(res.data.user))
             var users = JSON.parse(localStorage.getItem('users'))
             if (users) {
               dispatch({
@@ -44,56 +61,51 @@ function Login() {
                 payload: null,
               })
             }
-           
-
-            if(previousLocation){
-              history.push({
-                pathname: `/previousLocation`,
-                state: {previousLocation: location.pathname},
-              })
-            }
-            else{
-              history.push('/')
-
-            }
-          })
-
-          
+            history.push('/')
+          }
         })
-        .catch((error) => alert(error.message))
+
     }
   }
 
   const register = (e) => {
     setinputSelector('Register')
-
     if (inputSelector === 'Register') {
       e.preventDefault()
-      if(name === ''){
-        alert("Full Name is Required")
+
+
+
+      if (name === "" || email === "" || password === "" || contact === "") {
+        alert("All fields are required")
       }
-     else if(contact === ''){
-        alert("Contact Number is Required")
+      else if (name.search(/[a-zA-Z]/) == -1) {
+        alert("Name should be Alphabetic")
       }
-   else{
-    auth
-    .createUserWithEmailAndPassword(email, password)
-    .then((auth) => {
-      // it successfully created a new user with email and password
-      if (auth) {
+      else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
+        alert("Invalid Email Entered")
+      }
+      else if (contact.length !== 11) {
+        alert("Invalid Contact Entered")
+      }
+      else if (password.length < 8) {
+        alert("Password should be atleast 8 characters long")
+      }
+
+      else {
         var userData = {
-          id: auth.user.uid,
-          name:name,
-          contact: contact,
+          name: name,
           email: email,
+          password: password,
+          contact: contact
         }
-      
-        database
-          .ref(`userData/${auth.user.uid}`)
-          .set(userData)
+        axios
+          .post(`http://localhost:8080/data/signup`, userData)
           .then((res) => {
-            database.ref(`userData/${auth.user.uid}`).on('value', (snap) => {
-              localStorage.setItem('users', JSON.stringify(snap.val()))
+            if (res.data.success !== true) {
+              alert(JSON.stringify(res.data.error))
+            }
+            else {
+              localStorage.setItem('users', JSON.stringify(res.data.user))
               var users = JSON.parse(localStorage.getItem('users'))
               if (users) {
                 dispatch({
@@ -106,26 +118,14 @@ function Login() {
                   payload: null,
                 })
               }
-             
-              if(previousLocation){
-                history.push({
-                  pathname: `/previousLocation`,
-                  state: {previousLocation: location.pathname},
-                })
-              }
-              else{
-                history.push('/')
-  
-              }
-            })
-          })
+              history.push('/')
+            }
 
-     
+
+          })
       }
-    })
-    .catch((error) => alert(error.message))
-   }
     }
+
   }
 
   return (
@@ -171,12 +171,12 @@ function Login() {
           <h1>Register</h1>
 
           <form>
-          <h5>Full Name</h5>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setname(e.target.value)}
-          />
+            <h5>Full Name</h5>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setname(e.target.value)}
+            />
             <h5>E-mail</h5>
             <input
               type="text"
