@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     overflow: 'hidden',
     marginTop: '2%',
+    marginBottom:"5%"
   },
   paper: {
     padding: theme.spacing(2),
@@ -45,7 +46,7 @@ function LandingSection5() {
     })
   }, [section5Items])
   return (
-    <div className={classes.root}>
+    <div id="section5" className={classes.root}>
 
 
       {section5Items && section5Items.map((images) => (

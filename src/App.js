@@ -15,6 +15,7 @@ import UserOrders from "./components/Userorders"
 import UserLogin from './components/Navbar/UserLogin'
 import Wishlist from "./components/wishlistComponent"
 import Navbar from './components/Navbar'
+import MobileNavbar from "./components/Navbar/mobileNavbar"
 import Footer from './components/Footer'
 import Contact from "./components/contact"
 
@@ -52,7 +53,7 @@ function App() {
         payload: null,
       })
     }
-  }, [ Userorders])
+  }, [Userorders])
 
   return (
     <Router>
@@ -86,7 +87,12 @@ function App() {
             <LandingSection3 />
             <LandingSection4 />
             <LandingSection5 />
-            <Footer />
+            <div className="footer">
+              <Footer />
+            </div>
+            <div className="mobile__navbar">
+              <MobileNavbar />
+            </div>
           </Route>
 
           <Route exact path="/User_Login">
@@ -130,13 +136,13 @@ function App() {
           </Route>
 
           <Route exact path="/User_Orders">
-          <div className="navbar__app">
+            <div className="navbar__app">
               <Navbar />
             </div>
             <UserOrders />
             <Footer />
 
-        </Route>
+          </Route>
         </Switch>
       </div>
     </Router>
