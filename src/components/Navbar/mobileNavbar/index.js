@@ -19,6 +19,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import clsx from 'clsx';
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import HomeIcon from '@material-ui/icons/Home';
 
 import { useStateValue } from '../../StateProvider'
 
@@ -30,14 +32,16 @@ const useStyles = makeStyles({
     bottom:"0%",
   },
   list: {
-    width: 250,
+    width: 380,
   },
   fullList: {
-    width: 'auto',
+    width: "auto",
   },
 });
 
 export default function LabelBottomNavigation() {
+  const history = useHistory()
+  const location = useLocation()
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -53,6 +57,18 @@ export default function LabelBottomNavigation() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const signoutMethod = () =>{
+    localStorage.removeItem("users")
+  
+    dispatch({
+      type: 'SET_USER',
+      payload: null,
+    })
+    
+    history.push('/')
+    
+  }
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -75,7 +91,7 @@ export default function LabelBottomNavigation() {
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText onClick={()=>alert(text)} primary={text} />
           </ListItem>
         ))}
       </List>
@@ -92,18 +108,21 @@ export default function LabelBottomNavigation() {
   );
 
   return (
+    
     <BottomNavigation showLabels={true} value={value} onChange={handleChange} className={classes.root}>
+      <BottomNavigationAction onClick={() => history.push('/')}  style={{color:value === "Home" ? "red" :"black"}}  label="Home" value="Home" icon={<HomeIcon />} />
+
             {users === null ? (
-                    <BottomNavigationAction  style={{color:value === "Login" ? "red" :"black"}}  label="Login" value="Login" icon={<PersonAddIcon />} />
+                    <BottomNavigationAction onClick={() => history.push('/User_Login')}  style={{color:value === "Login" ? "red" :"black"}}  label="Login" value="Login" icon={<PersonAddIcon />} />
 
             ) : (
               
-                <BottomNavigationAction  style={{color:value === "Login" ? "red" :"black"}}  label="Sign Out" value="Login" icon={<PersonAddIcon />} />
+                <BottomNavigationAction onClick={signoutMethod}  style={{color:value === "Login" ? "red" :"black"}}  label="Sign Out" value="Login" icon={<PersonAddIcon />} />
 
             )}
           {users !== null && 
-      <BottomNavigationAction style={{color:value === "Shops" ? "red" :"black"}}  label={`Orders ${Userorders === null ? 0 :  Userorders.length}`} value="Shops" icon={<ShopIcon />} />}
-      <BottomNavigationAction  style={{color:value === "Wishlist" ? "red" :"black"}}  label={`Wishlist ${wishlist === null ? 0 : wishlist.length}`} value="Wishlist" icon={<FavoriteIcon />} />
+      <BottomNavigationAction onClick={() => history.push('/User_Orders')} style={{color:value === "Shops" ? "red" :"black"}}  label={`Orders ${Userorders === null ? 0 :  Userorders.length}`} value="Shops" icon={<ShopIcon />} />}
+      <BottomNavigationAction onClick={() => history.push('/wishlist')}  style={{color:value === "Wishlist" ? "red" :"black"}}  label={`Wishlist ${wishlist === null ? 0 : wishlist.length}`} value="Wishlist" icon={<FavoriteIcon />} />
       <BottomNavigationAction onClick={toggleDrawer("right", true)}  style={{color:value === "Menu" ? "red" :"black"}}  label="Menu" value="Menu" icon={<MenuIcon />} />
       <div>
 

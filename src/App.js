@@ -18,7 +18,6 @@ import Navbar from './components/Navbar'
 import MobileNavbar from "./components/Navbar/mobileNavbar"
 import Footer from './components/Footer'
 import Contact from "./components/contact"
-
 // admin Panel Routes
 
 import Login from './components/login'
@@ -112,7 +111,12 @@ function App() {
               <Navbar />
             </div>
             <Wishlist />
-            <Footer />
+            <div className="footer">
+              <Footer />
+            </div>
+            <div className="mobile__navbar">
+              <MobileNavbar />
+            </div>
           </Route>
 
 
@@ -140,7 +144,12 @@ function App() {
               <Navbar />
             </div>
             <UserOrders />
-            <Footer />
+            <div className="footer">
+              <Footer />
+            </div>
+            <div className="mobile__navbar">
+              <MobileNavbar />
+            </div>
 
           </Route>
         </Switch>
