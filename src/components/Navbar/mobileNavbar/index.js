@@ -107,7 +107,10 @@ export default function LabelBottomNavigation() {
   const handleClick = (value,links) => {
     setDrawerOpen(value);
     setState({ ...state, right: value });
-    history.push(links)
+    if(links){
+      history.push(links)
+
+    }
   }
 
   const list = (anchor) => (
@@ -120,9 +123,11 @@ export default function LabelBottomNavigation() {
     // onKeyDown={toggleDrawer(anchor, false)}
     >
       <List style={{ padding: 10 }}>
+
+     
         <ListItem  button style={{ backgroundColor: '#d50000', height: 55 }}>
-          <ListItemText style={{ color: "#ffffff" }}><span style={{ fontWeight: "bold", fontSize: "12px" }}><BuildIcon style={{ fontSize: "14px" }} /> Build & Price</span></ListItemText>
-          <ListItemIcon ><ArrowForwardIosIcon style={{ fontSize: 20, color: "#ffffff", marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
+          <ListItemText style={{ color: "#ffffff" }}><span style={{ fontWeight: "bold", fontSize: "15px" }}><BuildIcon style={{ fontSize: "14px" }} /> Icon Wood</span></ListItemText>
+          <ListItemIcon ><CloseIcon onClick={() => handleClick(false, null)} style={{ fontSize: 20, color: "#ffffff", marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
         </ListItem>
         <ListItem onClick={()=>setValue2(1)} button style={{ border: value2===1 && "2px solid #d50000", marginTop: 6, height: 55 }}>
           <ListItemText style={{ color: "#d50000" }}><span style={{ fontWeight: "bold", fontSize: "14px" }}>Find Location</span></ListItemText>
