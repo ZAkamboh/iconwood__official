@@ -10,7 +10,7 @@ import {
 } from './components/landingPage'
 
 import ViewProduct from './components/products/ViewProduct'
-import { Chairs, Sofas } from './components/products'
+import { Chairs, Sofas,Swings,Beds,CenterTables,Dinnings } from './components/products'
 import UserOrders from "./components/Userorders"
 import UserLogin from './components/Navbar/UserLogin'
 import Wishlist from "./components/wishlistComponent"
@@ -18,6 +18,9 @@ import Navbar from './components/Navbar'
 import MobileNavbar from "./components/Navbar/mobileNavbar"
 import Footer from './components/Footer'
 import Contact from "./components/contact"
+
+
+
 // admin Panel Routes
 
 import Login from './components/login'
@@ -25,6 +28,12 @@ import AdminNavbar from './components/Admin/AdminNavbar'
 import AdminHome from './components/Admin/AdminHome'
 import Adminlandingpage from './components/Admin/AdminLandingPage'
 import Allorders from "./components/Admin/allAdminOrders"
+import AdminBeds from "./components/Admin/adminbeds"
+import AdminChairs from "./components/Admin/adminchairs"
+import AdminSofas from "./components/Admin/adminsofas"
+import AdminDinnings from "./components/Admin/admindinnings"
+import AdminSwings from "./components/Admin/adminswings"
+import Centertabels from "./components/Admin/centertabels"
 // admin Panel Routes End
 
 // context api and database
@@ -58,6 +67,9 @@ function App() {
     <Router>
       <div className="app">
         <Switch>
+
+
+{/* admin routes  */}
           <Route exact path="/Admin">
             <Login />
           </Route>
@@ -76,6 +88,42 @@ function App() {
             <AdminNavbar />
             <Allorders />
           </Route>
+
+          <Route exact path="/adminBeds">
+            <AdminNavbar />
+            <AdminBeds />
+          </Route>
+
+          <Route exact path="/adminChairs">
+            <AdminNavbar />
+            <AdminChairs />
+          </Route>
+
+          <Route exact path="/adminSofas">
+            <AdminNavbar />
+            <AdminSofas />
+          </Route>
+
+          <Route exact path="/adminDinnings">
+            <AdminNavbar />
+            <AdminDinnings />
+          </Route>
+          
+
+          <Route exact path="/adminSwings">
+            <AdminNavbar />
+            <AdminSwings />
+          </Route>
+
+
+          <Route exact path="/centertabels">
+            <AdminNavbar />
+            <Centertabels />
+          </Route>
+          
+
+
+{/* admin routes  */}
 
           <Route exact path="/">
             <div className="navbar__app">
@@ -129,14 +177,35 @@ function App() {
           </Route>
 
 
-          <Route exact path="/chair">
+          <Route exact path="/chairs">
             <Navbar />
             <Chairs />
           </Route>
 
-          <Route exact path="/sofa">
+          <Route exact path="/sofas">
             <Navbar />
             <Sofas />
+          </Route>
+
+          <Route exact path="/beds">
+            <Navbar />
+            <Beds />
+          </Route>
+          <Route exact path="/centerTables">
+            <Navbar />
+            <CenterTables />
+          </Route>
+
+      
+
+          <Route exact path="/dinnings">
+            <Navbar />
+            <Dinnings />
+          </Route>
+
+          <Route exact path="/swings">
+            <Navbar />
+            <Swings />
           </Route>
 
           <Route exact path="/User_Orders">

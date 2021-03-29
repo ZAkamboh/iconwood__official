@@ -1,0 +1,93 @@
+body {
+    margin: 0%;
+  }
+  .navbar__main {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-bottom: 0.1px solid white;
+    background-color: white;
+  }
+  .navbar__content {
+    cursor: pointer;
+    display: flex;
+    .navbar-item {
+      font-size: 16px;
+      font-family: "gilroysemibold";
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0px 20px;
+      &::after {
+        position: absolute;
+        content: "";
+        height: 4px;
+        width: 100%;
+        background-color: #1d1d1f;
+        bottom: -24px;
+        width: 0px;
+        transition: all 0.3s ease;
+      }
+    }
+  }
+  .Navbar__content:hover .Navbar__main {
+    border-bottom: 2px solid red;
+  }
+  .navbar__cart__wishlist {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .Navbar__cart__wishlist__inner {
+    width: 35%;
+    display: flex;
+    justify-content: space-around;
+    cursor: pointer;
+  }
+  .cartandwishlist {
+    background-color: red;
+    width: 10vh;
+  }
+  .wishlist {
+    display: flex;
+  }
+  .wishlistnumeric {
+    margin-left: 5px;
+    background-color: red;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  
+  .orders {
+    display: flex;
+  }
+  .ordersnumeric {
+    margin-left: 8px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: red;
+  }
+  @media only screen and (min-width: 1000px) {
+    .navbar__main {
+      height: 5.12vw !important;
+    }
+    .navbar-item {
+      font-size: 1.17vw !important ;
+      &:hover {
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }

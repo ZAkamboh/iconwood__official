@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     paddingLeft: '50px',
+    marginTop:"50px"
   },
   typography: {
     marginTop: '20px',
@@ -61,6 +62,8 @@ theme.typography.h3 = {
 function ViewProduct() {
   const [{ users, }, dispatch] = useStateValue()
   const [section4Items,setsection4Items] = useState([])
+  const [beds,setbeds] = useState([])
+
   const classes = useStyles()
   const location = useLocation()
   const history = useHistory()
@@ -82,6 +85,16 @@ function ViewProduct() {
       }
 
       setsection4Items(values)
+    })
+
+    var values2 = []
+    database.ref(`beds`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values2.push({ ...fetchData[keys], key: keys })
+      }
+
+      setbeds(values2)
     })
 
 
@@ -344,7 +357,7 @@ function ViewProduct() {
             </ThemeProvider>
           </div>
           <div className="Buttons">
-            <button
+            {/* <button
               style={{
                 backgroundColor: color === 1 ? 'black' : '',
                 color: color === 1 ? 'white' : 'black',
@@ -360,7 +373,157 @@ function ViewProduct() {
                 />
               </span>{' '}
               Shop Now
+            </button> */}
+            <button
+              style={{
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(2)}
+              onMouseLeave={() => Selectcolor(false)}
+              className="Buttons__WishList"
+            >
+              <span>
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
+              </span>{' '}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
             </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </div>
+
+     )
+   })}
+
+
+
+
+{beds.map((items,i)=>{
+     return(
+      items.key === productId &&
+      <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={5}>
+       
+        <Carousel
+              indicators={false}
+              nextIcon={
+                <div className="nextIcon">
+                  <img src={Nexticon} alt="error" height="20px" width="20px" />
+                </div>
+              }
+              prevIcon={
+                <img
+                  src={Previousicon}
+                  alt="error"
+                  height="30px"
+                  width="30px"
+                />
+              }
+            >
+              <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+
+              {items.url2 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+              {items.url3 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+            </Carousel>
+     
+        </Grid>
+        <Grid item xs={4}>
+          <div className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography className={classes.typography} variant="h4">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography className={classes.typography} variant="h5">
+                {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              {!users ? (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button, A
+                  "LOGIN" form will appear to get your information. Then after
+                  you have Submitted your information, it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              ) : (
+                <Typography className={classes.typography} variant="h6">
+                  By clicking on the{' '}
+                  <span style={{ color: '#000000' }}>Shop Now</span> button,
+                  We will call you for further details about the product like
+                  : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+              )}
+            </ThemeProvider>
+          </div>
+          <div className="Buttons">
+            {/* <button
+              style={{
+                backgroundColor: color === 1 ? 'black' : '',
+                color: color === 1 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(1)}
+              onMouseLeave={() => Selectcolor(false)}
+              onClick={()=>shopNow(items)}
+              className="Buttons__shopNow"
+            >
+              <span>
+                <ShoppingCartIcon
+                  style={{ color: color === 1 ? 'white' : 'black' }}
+                />
+              </span>{' '}
+              Shop Now
+            </button> */}
             <button
               style={{
                 backgroundColor: color === 2 ? 'black' : '',

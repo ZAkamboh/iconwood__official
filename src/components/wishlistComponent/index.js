@@ -194,12 +194,19 @@ function Wishlist() {
         trackingid:Math.floor(Math.random() * 100000000000000),
         status: "Pending",
         orderDate: new Date().toLocaleDateString('de-DE'),
+        key:i.key
       }
       axios
         .post(`http://localhost:8080/data/UserOrders`, orderData)
         .then((res) => {
           alert("succussfully order done")
           
+
+          axios
+          .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
+          .then((res) => {
+            alert('email send to admin')
+          })
           const wishlistRemoveData = {
             title: i.title,
             desc: i.desc,
@@ -225,33 +232,8 @@ function Wishlist() {
             type: 'REMOVE_FROM_BASKET',
             payload: newRemoveArray2,
           })
-          // axios
-          //   .post(`http://localhost:8080/data/UserOrders`, orderData)
-          //   .then((res) => {
-          //     alert('email send  our representative contact soon')
-
-          //     axios
-          //       .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
-          //       .then((res) => {
-          //         alert('email send to admin')
-          //       })
-          //   })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     
+            
 
         })
    

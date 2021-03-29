@@ -50,9 +50,11 @@ export default function Allorders() {
     axios
       .get(`http://localhost:8080/data/getUserAllOrdersAdmin`)
       .then((res) => {
+
+       var allorders= res.data.Allorder.sort((a, b) => a - b).reverse()
         dispatch({
           type: "ALLORDERS",
-          payload: res.data.Allorder
+          payload: allorders
         })
       })
 

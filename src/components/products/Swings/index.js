@@ -3,9 +3,11 @@ import "../products.css"
 
 import { useLocation } from "react-router-dom";
 
-function Chairs(props) {
+function Swings(props) {
+
     const location = useLocation();
-  return <div>chairs component</div>
+    return <div>swing component</div>
+
 }
 
-export default Chairs
+export default Swings

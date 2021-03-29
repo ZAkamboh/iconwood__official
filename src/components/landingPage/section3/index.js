@@ -7,6 +7,7 @@ import Section1A from '../../../assets/landingPage/section2/section2a.jpg'
 import Section1B from '../../../assets/landingPage/section2/section2b.jpg'
 import Section1C from '../../../assets/landingPage/section2/section2c.jpg'
 import Fade from 'react-reveal/Fade'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 
 import './section3.css'
 
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LandingSection3() {
   const classes = useStyles()
+  const history = useHistory()
 
   const [state, setstate] = useState(0)
   const forbottomborder =(value)=>{
@@ -49,11 +51,13 @@ IconWood gives you the premium range of decent look furniture.
           <Fade bottom delay={1000}>
           <div className="section3__Icons">
           <div className="section3__Icons__inner">
-          <div onMouseOver={()=>forbottomborder(1)} onMouseLeave={forhiddenBorder} className={state===1 && "colorRed"}>Lightning</div>
-          <div onMouseOver={()=>forbottomborder(2)} onMouseLeave={forhiddenBorder} className={state===2 && "colorBlue"}>Desk</div>
-          <div onMouseOver={()=>forbottomborder(3)} onMouseLeave={forhiddenBorder} className={state===3 && "colorGreen"}>BedRoom</div>
-          <div onMouseOver={()=>forbottomborder(4)} onMouseLeave={forhiddenBorder} className={state===4 && "colorYellow"}>Chair</div>
-          <div onMouseOver={()=>forbottomborder(5)} onMouseLeave={forhiddenBorder} className={state===5 && "colorBrown"}>Accessories</div>
+          <div onClick={() => history.push('/beds')} onMouseOver={()=>forbottomborder(1)} onMouseLeave={forhiddenBorder} className={state===1 && "colorRed"}>Beds</div>
+          <div onClick={() => history.push('/chairs')} onMouseOver={()=>forbottomborder(2)} onMouseLeave={forhiddenBorder} className={state===2 && "colorBlue"}>Chairs</div>
+          <div onClick={() => history.push('/sofas')} onMouseOver={()=>forbottomborder(3)} onMouseLeave={forhiddenBorder} className={state===3 && "colorGreen"}>Sofas</div>
+          <div onClick={() => history.push('/dinnings')} onMouseOver={()=>forbottomborder(4)} onMouseLeave={forhiddenBorder} className={state===4 && "colorYellow"}>Dinnings</div>
+          <div onClick={() => history.push('/centerTables')} onMouseOver={()=>forbottomborder(5)} onMouseLeave={forhiddenBorder} className={state===5 && "colorBrown"}>Center Tables</div>
+          <div onClick={() => history.push('/swings')} onMouseOver={()=>forbottomborder(6)} onMouseLeave={forhiddenBorder} className={state===6 && "colorBlue"}>Swings</div>
+        
           </div>
            
 

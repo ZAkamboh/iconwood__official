@@ -3,9 +3,9 @@ import "../products.css"
 
 import { useLocation } from "react-router-dom";
 
-function Chairs(props) {
+function Dinnings(props) {
     const location = useLocation();
-  return <div>chairs component</div>
+  return <div>dinning component</div>
 }
 
-export default Chairs
+export default Dinnings

@@ -66,7 +66,7 @@ function AdminNavbar() {
             onMouseLeave={forhiddenBorder}
             className={state === 2 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/">Beds</Link>
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminBeds">Beds</Link>
 
           </div>
           <div
@@ -74,7 +74,7 @@ function AdminNavbar() {
             onMouseLeave={forhiddenBorder}
             className={state == 3 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/">Chairs</Link>
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminChairs">Chairs</Link>
 
           </div>
           <div
@@ -82,7 +82,7 @@ function AdminNavbar() {
             onMouseLeave={forhiddenBorder}
             className={state == 4 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/">Center Tables</Link>
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/centertabels">Center Tables</Link>
 
           </div>
           <div
@@ -90,7 +90,7 @@ function AdminNavbar() {
             onMouseLeave={forhiddenBorder}
             className={state === 5 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/">Sofa's</Link>
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminSofas">Sofa's</Link>
 
           </div>
           <div
@@ -98,9 +98,19 @@ function AdminNavbar() {
             onMouseLeave={forhiddenBorder}
             className={state === 6 ? 'borderBottom' : 'borderBottomHidden'}
           >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/">Dinning</Link>
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminDinnings">Dinning</Link>
 
           </div>
+
+          <div
+            onMouseOver={() => forbottomborder(7)}
+            onMouseLeave={forhiddenBorder}
+            className={state === 7 ? 'borderBottom' : 'borderBottomHidden'}
+          >
+          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminSwings">Swings</Link>
+
+          </div>
+
         </div>
       </div>
       <div className="Navbar__cart__wishlist">

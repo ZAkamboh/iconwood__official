@@ -103,36 +103,81 @@ function Adminlandingpage() {
     })
 
 
-    var values5 = []
-    database.ref(`Section5Data`).once('value', (snap) => {
-      var fetchData5 = snap.val()
-      for (let keys in fetchData5) {
-        values5.push({ ...fetchData5[keys], key: keys })
-      }
-
-      dispatch({
-        type: 'SECTION5_DATA',
-        payload: values5,
-      })
-    })
-
-
-
-
-
 
   }, [])
 
 
 
+const deleteAction = (sections,key,index) => {
+
+  if(sections === "sectionone"){
+
+    var datasection1=section1Items
+    var newdatasection1=datasection1.filter((item,i) =>i!== index )
+    dispatch({
+      type: 'SECTION1_DATA',
+      payload: newdatasection1,
+    })
+  
+    database
+    .ref(`Section1Data/${key}`)
+    .remove()
+    .then(() => {
+      alert("successfully delete")
+ 
+    }).catch((error)=>{
+             alert(error)
+    });
+
+  }
 
 
 
+   else if(sections === "sectiontwo"){
 
+    var datasection2=section2Items
+    var newdatasection2=datasection2.filter((item,i2) =>item.key !== key )
+    dispatch({
+      type: 'SECTION2_DATA',
+      payload: newdatasection2,
+    })
+  
+    database
+    .ref(`Section2Data/${key}`)
+    .remove()
+    .then(() => {
+      alert("successfully delete")
+ 
+    }).catch((error)=>{
+             alert(error)
+    });
 
+  }
 
+  else if(sections === "sectionfour"){
+    var datasection4=section4Items
+    var newdatasection4=datasection4.filter((item,i4) => item.key !== key )
+    dispatch({
+      type: 'SECTION4_DATA',
+      payload: newdatasection4,
+    })
+  
+    database
+    .ref(`Section4Data/${key}`)
+    .remove()
+    .then(() => {
+      alert("successfully delete")
+ 
+    }).catch((error)=>{
+             alert(error)
+    });
+    
+  }
 
-
+  else{
+    alert(" no section ")
+  }
+}
 
 
 
@@ -246,49 +291,7 @@ function Adminlandingpage() {
 
   }
 
-  const _handleClick_section5 = () => {
-    var dataSEction5 = {
-      title: title,
-      url: imageUrl,
-      section: section,
-      image1:image1,
-      image2:image2,
-      image3:image3,
 
-    }
-    database
-      .ref(`Section5Data`)
-      .push(dataSEction5)
-      .then(response => {
-        alert("successfully upload section 5 post")
-
-
-        settitle('')
-        setimageUrl('')
-
-        var values5 = []
-        database.ref(`Section5Data`).once('value', (snap) => {
-          var fetchData = snap.val()
-          for (let keys in fetchData) {
-            values5.push({ ...fetchData[keys], key: keys })
-          }
-          // setsection4Data([section4Data, ...values5])
-
-          dispatch({
-            type: "SECTION5_DATA",
-            payload: values5,
-          })
-
-        })
-
-        history.replace('/AdminHome')
-
-      })
-      .catch(error => {
-        alert(error)
-      });
-
-  }
 
 
 
@@ -434,29 +437,7 @@ function Adminlandingpage() {
 
 
 
-        {section === 'SECTION 5' &&
-          <div className="Section4__container">
-
-            <p>{section}</p>
-
-            <h5>Title</h5>
-            <input value={title} type="text" onChange={(e) => settitle(e.target.value)} />
-
-            <h5>Image 1</h5>
-            <input  type="text" onChange={(e) => setimage1(e.target.value)} />
-
-            <h5>Image 2</h5>
-            <input  type="text" onChange={(e) => setimage2(e.target.value)} />
-          
-            <h5>Image 3</h5>
-            <input  type="text" onChange={(e) => setimage3(e.target.value)} />
-
-            <button onClick={_handleClick_section5} className="login__signInButton">
-              SUBMIT
-               </button>
-          </div>
-
-        }
+        
 
 
         {section === 'SECTION 4' &&
@@ -525,7 +506,7 @@ function Adminlandingpage() {
                   </TableCell>
                
                   <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
-                  <Button style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                  <Button onClick={()=>deleteAction('sectionone',item.key,i)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
                     Delete
                      </Button>
 
@@ -557,7 +538,7 @@ function Adminlandingpage() {
                   </TableCell>
        
                   <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
-                  <Button style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                  <Button onClick={()=>deleteAction('sectiontwo',item.key)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
                     Delete
                      </Button>
 
@@ -593,7 +574,7 @@ function Adminlandingpage() {
                   <TableCell align="right">{item.desc}</TableCell>
                   <TableCell align="right">{item.trackingid}</TableCell>
                   <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
-                  <Button style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                  <Button onClick={()=>deleteAction('sectionfour',item.key)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
                     Delete
                      </Button>
 
@@ -604,37 +585,7 @@ function Adminlandingpage() {
         </TableContainer>
 }
 
-{section === 'SECTION 5' &&
 
-        <TableContainer style={{ marginTop: "5%" }} component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow >
-                <TableCell align="right">Title</TableCell>
-            
-                <TableCell align="center">Product</TableCell>
-
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {section5Items && section5Items.map((item, i) => (
-                <TableRow key={i} style={{ cursor: "pointer" }}>
-
-                  <TableCell align="right">
-                    {item.title}
-                  </TableCell>
-                 
-                  <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
-                  <Button style={{ marginTop: "10%" }} variant="contained" color="secondary">
-                    Delete
-                     </Button>
-
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-}
       </div>
     </div>
   )

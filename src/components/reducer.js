@@ -1,15 +1,22 @@
 export const initialState = {
+
   wishlist: [],
   Userorders:[],
   section4Items: [],
   section5Items: [],
   section1Items: [],
   section2Items: [],
-
+  bedsData: [],
+  chairsData:[],
+  sofasData:[],
+  dinningsData:[],
+  swingsData:[],
+  centertabelsData:[],
   users: null,
   viewProducImage:[],
   allorders:[],
   allusers:[]
+
 }
 
 // Selector
@@ -41,6 +48,46 @@ const reducer = (state, action) => {
           ...state,
           section5Items: action.payload,
         }
+
+        case 'BEDS':
+          return {
+            ...state,
+            bedsData: action.payload,
+          }
+
+          case 'CHAIRS':
+            return {
+              ...state,
+              chairsData: action.payload,
+            }
+
+            case 'SOFAS':
+              return {
+                ...state,
+                sofasData: action.payload,
+              }
+
+              case 'DINNINGS':
+                return {
+                  ...state,
+                  dinningsData: action.payload,
+                }
+
+
+                case 'SWINGS':
+                  return {
+                    ...state,
+                    swingsData: action.payload,
+                  }
+
+                  case 'CENTERTABELS':
+                    return {
+                      ...state,
+                      centertabelsData: action.payload,
+                    }
+
+                  
+                   
 
     case 'ADD_TO_WISHLIST':
       return {
