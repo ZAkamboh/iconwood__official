@@ -14,6 +14,9 @@ import TableRow from '@material-ui/core/TableRow';
 import { useStateValue } from '../../StateProvider'
 import Paper from '@material-ui/core/Paper';
 import './alladminorders.css'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { BackServer } from "../../Services"
+
 import axios from 'axios'
 import ClearIcon from '@material-ui/icons/Clear';
 const useStyles = makeStyles({
@@ -24,14 +27,16 @@ const useStyles = makeStyles({
 
 
 
-const allorders = [
-  { name: "zubair", email: "zubair@gmail.com", contactNum: "03312380673" },
-  { name: "zubair", email: "zubair@gmail.com", contactNum: "03312380673" }
+const allorders2 = [
+  { username: "zubair", useremail: "zubair@gmail.com", contactNum: "03312380673",status:1 },
+  { username: "zubair", useremail: "zubair@gmail.com", contactNum: "03312380673",status:2 }
 
 ]
 
 export default function Allorders() {
   const classes = useStyles();
+  const history = useHistory()
+
   const [{ allusers, allorders }, dispatch] = useStateValue()
   const [userdataPopup, setuserdataPopup] = useState(false)
   const [url, seturl] = useState('')
@@ -47,8 +52,13 @@ export default function Allorders() {
 
 
   useEffect(() => {
+
+    var ADMIN = JSON.parse(localStorage.getItem('ADMIN'))
+    if (!ADMIN) {
+      history.push('/Admin')
+    }
     axios
-      .get(`http://localhost:8080/data/getUserAllOrdersAdmin`)
+      .get(`${BackServer}/data/getUserAllOrdersAdmin`)
       .then((res) => {
 
        var allorders= res.data.Allorder.sort((a, b) => a - b).reverse()
@@ -58,7 +68,7 @@ export default function Allorders() {
         })
       })
 
-  }, [userdataPopup])
+  }, [])
 
   const allusersorderdata = (data) => {
     setuserdataPopup(true);
@@ -84,7 +94,7 @@ export default function Allorders() {
 
     }
     axios
-      .post(`http://localhost:8080/data/deliveredOrders`, updateDataObject)
+      .post(`${BackServer}/data/deliveredOrders`, updateDataObject)
       .then((res) => {
         alert("successfully delivered")
         setuserdataPopup(false);
@@ -92,32 +102,7 @@ export default function Allorders() {
   }
   return (
     <div>
-      {userdataPopup &&
-        <div className="userorderPopup">
-          <div className="clearIcon">
-            <ClearIcon onClick={() => setuserdataPopup(false)} />
-          </div>
-          <div >
-            <img src={url} width="30%" height="30%" />
-            <div >
-              <p >Item:{title}</p>
-              <p >
-                <strong>Price:{rate}</strong>
-              </p>
-            </div>
-            <div>
-              <p>Tracking Id : </p>
-              <p >{trackingid}</p>
-              <p style={{ color: status === "delivered" ? "green" : "red" }}> Status : {status === "delivered" ? `Delivered Date ${deliveredDate}` : status }</p>
-              {status !== "delivered" &&
-                <span>Are you want to delivered? <button onClick={() => deliveredAction()}>Yes</button></span>
-              }
-
-            </div>
-
-          </div>
-        </div>
-      }
+    
 
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
@@ -135,7 +120,7 @@ export default function Allorders() {
           </TableHead>
           <TableBody>
             {allorders && allorders.map((order, i) => (
-              <TableRow onClick={() => allusersorderdata(order)} key={i} style={{ cursor: "pointer" }}>
+              <TableRow onClick={() => history.push("/allOrdersdetail", { order: order })} key={i} style={{ cursor: "pointer" }}>
                 <TableCell component="th" scope="row">
                   {order.username}
                 </TableCell>

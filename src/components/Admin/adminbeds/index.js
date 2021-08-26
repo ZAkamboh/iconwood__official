@@ -65,6 +65,7 @@ function AdminBeds() {
       }
 
 
+      values1.sort((a, b) => a - b).reverse()
 
       dispatch({
         type: 'BEDS',
@@ -185,7 +186,7 @@ const deleteAction = (key) => {
 
           })
 
-          history.replace('/AdminHome')
+          history.replace('/adminBeds')
 
         })
         .catch(error => {
@@ -214,7 +215,7 @@ const deleteAction = (key) => {
             <h5>Rate</h5>
             <input
               value={rate}
-              type="number"
+              type="text"
               onChange={(e) => setrate(e.target.value)}
             />
 

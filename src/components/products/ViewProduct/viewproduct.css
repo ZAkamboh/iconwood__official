@@ -1,15 +1,18 @@
 .Buttons{
 display: flex;
 justify-content: space-evenly;
-margin-top: 30px;
+margin-top: 5px;
 }
 
 .Buttons__shopNow {
     border-radius: 2px;
-    width: 35%;
+
     border: 1px solid;
     margin-top: 10px;
     box-shadow: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 20px;
   }
 
   .Buttons__WishList {
@@ -20,10 +23,12 @@ margin-top: 30px;
     box-shadow: none;
     padding-left: 20px;
     padding-right: 20px;
+
   }
   .product__Image{
     object-fit:contain;
-    width: 70%;
+    width: 100%;
+    padding-top: 8%;
   }
 
   .nextIcon{

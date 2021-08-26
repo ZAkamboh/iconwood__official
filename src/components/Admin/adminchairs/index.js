@@ -67,6 +67,7 @@ function Adminchairs() {
             }
 
 
+            values1.sort((a, b) => a - b).reverse()
 
             dispatch({
                 type: 'CHAIRS',
@@ -179,7 +180,6 @@ function Adminchairs() {
                             values.push({ ...fetchData[keys], key: keys })
                         }
                         // setsection4Data([section4Data, ...values])
-
                         dispatch({
                             type: "CHAIRS",
                             payload: values,
@@ -187,7 +187,7 @@ function Adminchairs() {
 
                     })
 
-                    history.replace('/AdminHome')
+                    history.replace('/adminChairs')
 
                 })
                 .catch(error => {
@@ -216,7 +216,8 @@ function Adminchairs() {
                     <h5>Rate</h5>
                     <input
                         value={rate}
-                        type="number"
+                        type="text"
+
                         onChange={(e) => setrate(e.target.value)}
                     />
 

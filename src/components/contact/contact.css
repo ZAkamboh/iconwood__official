@@ -335,6 +335,17 @@ textarea.input100 {
   .wrap-contact100 {
     padding: 82px 15px 33px 15px;
   }
+
+  .contact100-form-title {
+    display: block;
+    width: 100%;
+    font-family: Poppins-Bold;
+    font-size: 20px;
+    color: #333333;
+    line-height: 1.2;
+    text-align: left;
+    padding-bottom: 64px;
+  }
 }
 
 
@@ -436,7 +447,7 @@ textarea.input100 {
   font-size: 16px;
   color: #fff;
 
-  position: fixed;
+  /* position: fixed; */
   z-index: -1;
   display: -webkit-box;
   display: -webkit-flex;
@@ -452,7 +463,7 @@ textarea.input100 {
   padding: 0 20px;
   cursor:pointer;
 
-  top: 50%;
+  top: 25%;
   left: calc((100% - 640px) / 2);
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
@@ -466,7 +477,7 @@ textarea.input100 {
   font-size: 16px;
   color: #fff;
 
-  position: fixed;
+  /* position: fixed; */
   z-index: -1;
   display: -webkit-box;
   display: -webkit-flex;
@@ -481,7 +492,7 @@ textarea.input100 {
   background-color: brown;
   padding: 0 20px;
 cursor:pointer;
-  top: 60%;
+  top: 35%;
   left: calc((100% - 640px) / 2);
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);

@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
 });
 function Adminlandingpage() {
-  const [{ section1Items, section2Items, section4Items, section5Items }, dispatch] = useStateValue();
+  const [{ LandingBanners, section2Items,section3Items, section4Items, section5Items }, dispatch] = useStateValue();
   const classes = useStyles();
 
   const history = useHistory()
@@ -58,14 +58,14 @@ function Adminlandingpage() {
 
 
     var values1 = []
-    database.ref(`Section1Data`).once('value', (snap) => {
+    database.ref(`landingbanners`).once('value', (snap) => {
       var fetchData1 = snap.val()
       for (let keys in fetchData1) {
         values1.push({ ...fetchData1[keys], key: keys })
       }
 
       dispatch({
-        type: 'SECTION1_DATA',
+        type: 'Landing_bannners_DATA',
         payload: values1,
       })
     })
@@ -89,6 +89,20 @@ function Adminlandingpage() {
     })
 
 
+    var values3 = []
+    database.ref(`Section3Data`).once('value', (snap) => {
+      var fetchData3 = snap.val()
+      for (let keys in fetchData3) {
+        values3.push({ ...fetchData3[keys], key: keys })
+      }
+
+      dispatch({
+        type: 'SECTION3_DATA',
+        payload: values3,
+      })
+    })
+
+
     var values4 = []
     database.ref(`Section4Data`).once('value', (snap) => {
       var fetchData4 = snap.val()
@@ -104,23 +118,40 @@ function Adminlandingpage() {
 
 
 
+    var values5 = []
+    database.ref(`Section5Data`).once('value', (snap) => {
+      var fetchData5 = snap.val()
+      for (let keys in fetchData5) {
+        values5.push({ ...fetchData5[keys], key: keys })
+      }
+
+      dispatch({
+        type: 'SECTION5_DATA',
+        payload: values5,
+      })
+    })
+
+
+
+
+
   }, [])
 
 
 
 const deleteAction = (sections,key,index) => {
 
-  if(sections === "sectionone"){
+  if(sections === "landingbanners"){
 
-    var datasection1=section1Items
+    var datasection1=LandingBanners
     var newdatasection1=datasection1.filter((item,i) =>i!== index )
     dispatch({
-      type: 'SECTION1_DATA',
+      type: 'Landing_bannners_DATA',
       payload: newdatasection1,
     })
   
     database
-    .ref(`Section1Data/${key}`)
+    .ref(`landingbanners/${key}`)
     .remove()
     .then(() => {
       alert("successfully delete")
@@ -154,6 +185,29 @@ const deleteAction = (sections,key,index) => {
 
   }
 
+  else if(sections === "sectionthree"){
+
+    var datasection3=section3Items
+    var newdatasection3=datasection3.filter((item,i2) =>item.key !== key )
+    dispatch({
+      type: 'SECTION3_DATA',
+      payload: newdatasection3,
+    })
+  
+    database
+    .ref(`Section3Data/${key}`)
+    .remove()
+    .then(() => {
+      alert("successfully delete")
+ 
+    }).catch((error)=>{
+             alert(error)
+    });
+
+  }
+
+  
+
   else if(sections === "sectionfour"){
     var datasection4=section4Items
     var newdatasection4=datasection4.filter((item,i4) => item.key !== key )
@@ -173,6 +227,34 @@ const deleteAction = (sections,key,index) => {
     });
     
   }
+
+
+
+  else if(sections === "sectionfive"){
+    var datasection5=section5Items
+    var newdatasection5=datasection5.filter((item,i4) => item.key !== key )
+    dispatch({
+      type: 'SECTION5_DATA',
+      payload: newdatasection5,
+    })
+  
+    database
+    .ref(`Section5Data/${key}`)
+    .remove()
+    .then(() => {
+      alert("successfully delete")
+ 
+    }).catch((error)=>{
+             alert(error)
+    });
+    
+  }
+
+
+
+
+
+
 
   else{
     alert(" no section ")
@@ -209,25 +291,25 @@ const deleteAction = (sections,key,index) => {
     )
   }
 
-  const _handleClick_section1 = () => {
-    var dataSEction1 = {
+  const _handleClick_Landingbanners = () => {
+    var landingbannersData = {
       title: title,
       url: imageUrl,
       section: section,
 
     }
     database
-      .ref(`Section1Data`)
-      .push(dataSEction1)
+      .ref(`landingbanners`)
+      .push(landingbannersData)
       .then(response => {
-        alert("successfully upload section 1 post")
+        alert("successfully upload section Banners post")
 
 
         settitle('')
         setimageUrl('')
 
         var values1 = []
-        database.ref(`Section1Data`).once('value', (snap) => {
+        database.ref(`landingbanners`).once('value', (snap) => {
           var fetchData = snap.val()
           for (let keys in fetchData) {
             values1.push({ ...fetchData[keys], key: keys })
@@ -235,13 +317,13 @@ const deleteAction = (sections,key,index) => {
           // setsection4Data([section4Data, ...values1])
 
           dispatch({
-            type: "SECTION1_DATA",
+            type: "Landing_bannners_DATA",
             payload: values1,
           })
 
         })
 
-        history.replace('/AdminHome')
+        history.replace('/Landingpage')
 
       })
       .catch(error => {
@@ -282,7 +364,7 @@ const deleteAction = (sections,key,index) => {
 
         })
 
-        history.replace('/AdminHome')
+        history.replace('/Landingpage')
 
       })
       .catch(error => {
@@ -291,6 +373,8 @@ const deleteAction = (sections,key,index) => {
 
   }
 
+ 
+
 
 
 
@@ -298,22 +382,14 @@ const deleteAction = (sections,key,index) => {
   const _handleClick = () => {
     var data = {
       title: title,
-      desc: desc,
-      rate: rate,
+    
       url: imageUrl,
-      wishlist: false,
       section: section,
-      viewproduct: false,
     }
     if (data.title === "") {
       alert("title field is required")
     }
-    else if (data.desc === "") {
-      alert("desc field is required")
-    }
-    else if (data.rate === "") {
-      alert("Rate field is required")
-    }
+  
     else if (data.url === "") {
       alert("please upload any picture")
     }
@@ -346,7 +422,7 @@ const deleteAction = (sections,key,index) => {
 
           })
 
-          history.replace('/AdminHome')
+          history.replace('/Landingpage')
 
         })
         .catch(error => {
@@ -355,6 +431,62 @@ const deleteAction = (sections,key,index) => {
     }
 
   }
+
+
+
+  const _handleClick_section5 = () => {
+    var dataSEction5 = {
+      title: title,
+      url: imageUrl,
+      section: section,
+
+    }
+    database
+      .ref(`Section5Data`)
+      .push(dataSEction5)
+      .then(response => {
+        alert("successfully upload section 5 post")
+
+
+        settitle('')
+        setimageUrl('')
+
+        var values5 = []
+        database.ref(`Section5Data`).once('value', (snap) => {
+          var fetchData = snap.val()
+          for (let keys in fetchData) {
+            values5.push({ ...fetchData[keys], key: keys })
+          }
+          // setsection4Data([section4Data, ...values5])
+
+          dispatch({
+            type: "SECTION5_DATA",
+            payload: values5,
+          })
+
+        })
+
+        history.replace('/Landingpage')
+
+      })
+      .catch(error => {
+        alert(error)
+      });
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
 
 
@@ -362,7 +494,7 @@ const deleteAction = (sections,key,index) => {
       <div className="section4__main">
         <select onChange={(event) => setsection(event.target.value)} className="selectlist">
           <option>Select Section</option>
-          <option>SECTION 1</option>
+          <option>Landing page Banners</option>
           <option>SECTION 2</option>
           <option>SECTION 4</option>
           <option>SECTION 5</option>
@@ -370,7 +502,7 @@ const deleteAction = (sections,key,index) => {
 
 
 
-        {section === 'SECTION 1' &&
+        {section === 'Landing page Banners' &&
           <div className="Section4__container">
 
             <p>{section}</p>
@@ -395,7 +527,7 @@ const deleteAction = (sections,key,index) => {
               <LinearProgress variant="determinate" value={progress} color="secondary" />
             </div>
 
-            <button onClick={_handleClick_section1} className="login__signInButton">
+            <button onClick={_handleClick_Landingbanners} className="login__signInButton">
               SUBMIT
                </button>
           </div>
@@ -437,6 +569,9 @@ const deleteAction = (sections,key,index) => {
 
 
 
+
+
+
         
 
 
@@ -449,15 +584,6 @@ const deleteAction = (sections,key,index) => {
             <input value={title} type="text" onChange={(e) => settitle(e.target.value)} />
 
 
-            <h5>Description</h5>
-            <input value={desc} type="text" onChange={(e) => setdesc(e.target.value)} />
-
-            <h5>Rate</h5>
-            <input
-              value={rate}
-              type="number"
-              onChange={(e) => setrate(e.target.value)}
-            />
 
             <h5>Upload Image </h5>
             <input
@@ -484,8 +610,38 @@ const deleteAction = (sections,key,index) => {
 
 
 
+{section === 'SECTION 5' &&
+          <div className="Section4__container">
 
-{section === 'SECTION 1' &&
+            <p>{section}</p>
+
+            <h5>Title</h5>
+            <input value={title} type="text" onChange={(e) => settitle(e.target.value)} />
+
+
+            <h5>Upload Image </h5>
+            <input
+              type="file"
+              onChange={(e) => setfile(e.target.files[0])}
+            />
+
+            <button
+              onClick={upload}
+              className="btn btn-success mx-auto"
+            >
+              upload image
+               </button>
+            <div style={{ marginTop: 20 }}>
+              <LinearProgress variant="determinate" value={progress} color="secondary" />
+            </div>
+
+            <button onClick={_handleClick_section5} className="login__signInButton">
+              SUBMIT
+               </button>
+          </div>
+
+        }
+{section === 'Landing page Banners' &&
 
         <TableContainer style={{ marginTop: "5%" }} component={Paper}>
           <Table className={classes.table} aria-label="simple table">
@@ -498,7 +654,7 @@ const deleteAction = (sections,key,index) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {section1Items && section1Items.map((item, i) => (
+              {LandingBanners && LandingBanners.map((item, i) => (
                 <TableRow key={i} style={{ cursor: "pointer" }}>
 
                   <TableCell align="right">
@@ -506,7 +662,7 @@ const deleteAction = (sections,key,index) => {
                   </TableCell>
                
                   <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
-                  <Button onClick={()=>deleteAction('sectionone',item.key,i)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                  <Button onClick={()=>deleteAction('landingbanners',item.key,i)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
                     Delete
                      </Button>
 
@@ -549,6 +705,58 @@ const deleteAction = (sections,key,index) => {
         </TableContainer>
 }
 
+
+
+
+
+
+{section === 'SECTION 3' &&
+
+        <TableContainer style={{ marginTop: "5%" }} component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow >
+                <TableCell align="right">Title</TableCell>
+           
+                <TableCell align="center">Product</TableCell>
+
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {section3Items && section3Items.map((item, i) => (
+                <TableRow key={i} style={{ cursor: "pointer" }}>
+
+                  <TableCell align="right">
+                    {item.title}
+                  </TableCell>
+       
+                  <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
+                  <Button onClick={()=>deleteAction('sectionthree',item.key)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                    Delete
+                     </Button>
+
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {section === 'SECTION 4' &&
 
         <TableContainer style={{ marginTop: "5%" }} component={Paper}>
@@ -556,9 +764,7 @@ const deleteAction = (sections,key,index) => {
             <TableHead>
               <TableRow >
                 <TableCell align="right">Title</TableCell>
-                <TableCell align="right">Rate</TableCell>
-                <TableCell align="right">Desc</TableCell>
-                <TableCell align="right">Tracking Id</TableCell>
+         
                 <TableCell align="center">Product</TableCell>
 
               </TableRow>
@@ -570,9 +776,7 @@ const deleteAction = (sections,key,index) => {
                   <TableCell align="right">
                     {item.title}
                   </TableCell>
-                  <TableCell align="right">{item.rate}</TableCell>
-                  <TableCell align="right">{item.desc}</TableCell>
-                  <TableCell align="right">{item.trackingid}</TableCell>
+               
                   <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
                   <Button onClick={()=>deleteAction('sectionfour',item.key)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
                     Delete
@@ -584,6 +788,47 @@ const deleteAction = (sections,key,index) => {
           </Table>
         </TableContainer>
 }
+
+
+{section === 'SECTION 5' &&
+
+        <TableContainer style={{ marginTop: "5%" }} component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow >
+                <TableCell align="right">Title</TableCell>
+           
+                <TableCell align="center">Product</TableCell>
+
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {section5Items && section5Items.map((item, i) => (
+                <TableRow key={i} style={{ cursor: "pointer" }}>
+
+                  <TableCell align="right">
+                    {item.title}
+                  </TableCell>
+       
+                  <TableCell align="center" ><img width="20%" src={item.url} /></TableCell>
+                  <Button onClick={()=>deleteAction('sectionfive',item.key)} style={{ marginTop: "10%" }} variant="contained" color="secondary">
+                    Delete
+                     </Button>
+
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+}
+
+
+
+
+
+
+
+
 
 
       </div>

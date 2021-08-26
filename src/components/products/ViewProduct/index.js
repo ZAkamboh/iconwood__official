@@ -22,8 +22,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    marginBottom: '5%',
-    paddingTop:"2%"
+    paddingTop:"2%",
+    paddingBottom:"150px",
+    backgroundColor: "#eeede9",
+
   },
   paper: {
     padding: theme.spacing(2),
@@ -35,7 +37,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     paddingLeft: '50px',
-    marginTop:"50px"
+    marginTop:"10px",
+    fontFamily:"italic",
+    fontWeight:"bold"
+
   },
   typography: {
     marginTop: '20px',
@@ -44,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid grey',
     paddingTop: '10px',
     paddingBottom: '20px',
+    fontSize:"12px",
+
   },
 }))
 
@@ -62,7 +69,14 @@ theme.typography.h3 = {
 function ViewProduct() {
   const [{ users, }, dispatch] = useStateValue()
   const [section4Items,setsection4Items] = useState([])
+
   const [beds,setbeds] = useState([])
+  const [tables,settables] = useState([])
+  const [chairs,setchairs] = useState([])
+  const [dinnings,setdinnings] = useState([])
+  const [sofas,setsofas] = useState([])
+  const [swings,setswings] = useState([])
+
 
   const classes = useStyles()
   const location = useLocation()
@@ -77,6 +91,8 @@ function ViewProduct() {
   useEffect(() => {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
+
+
     var values = []
     database.ref(`Section4Data`).once('value', (snap) => {
       var fetchData = snap.val()
@@ -87,6 +103,9 @@ function ViewProduct() {
       setsection4Items(values)
     })
 
+
+
+
     var values2 = []
     database.ref(`beds`).once('value', (snap) => {
       var fetchData = snap.val()
@@ -96,6 +115,77 @@ function ViewProduct() {
 
       setbeds(values2)
     })
+
+
+
+
+
+
+    var values3 = []
+    database.ref(`centertabels`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values3.push({ ...fetchData[keys], key: keys })
+      }
+
+      settables(values3)
+    })
+
+
+
+
+
+    var values4 = []
+    database.ref(`chairs`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values4.push({ ...fetchData[keys], key: keys })
+      }
+
+      setchairs(values4)
+    })
+
+
+
+
+
+    var values5 = []
+    database.ref(`dinnings`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values5.push({ ...fetchData[keys], key: keys })
+      }
+
+      setdinnings(values5)
+    })
+
+
+
+
+    var values6 = []
+    database.ref(`sofas`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values6.push({ ...fetchData[keys], key: keys })
+      }
+
+      setsofas(values6)
+    })
+
+
+
+
+    var values7 = []
+    database.ref(`swings`).once('value', (snap) => {
+      var fetchData = snap.val()
+      for (let keys in fetchData) {
+        values7.push({ ...fetchData[keys], key: keys })
+      }
+
+      setswings(values7)
+    })
+
+
 
 
   }, [])
@@ -268,30 +358,23 @@ function ViewProduct() {
   return (
     <div>
 
-   {section4Items.map((items,i)=>{
+ 
+{beds.map((items,i)=>{
      return(
       items.key === productId &&
       <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={5}>
+        <Grid item item xs={12} sm={5}>
        
         <Carousel
               indicators={false}
               nextIcon={
-                <div className="nextIcon">
-                  <img src={Nexticon} alt="error" height="20px" width="20px" />
-                </div>
-              }
-              prevIcon={
-                <img
-                  src={Previousicon}
-                  alt="error"
-                  height="30px"
-                  width="30px"
-                />
-              }
+                false
+               }
+               prevIcon={
+                false
+               }
             >
               <Carousel.Item>
                 <img
@@ -324,56 +407,45 @@ function ViewProduct() {
             </Carousel>
      
         </Grid>
-        <Grid item xs={4}>
-          <div className={classes.detail}>
+        <Grid item xs={1}></Grid>
+
+        <Grid item item xs={12} sm={4}>
+       
+
+        <div id="detail" className={classes.detail}>
             <ThemeProvider theme={theme}>
-              <Typography className={classes.typography} variant="h4">
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
                 {items.desc}
               </Typography>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              <Typography className={classes.typography} variant="h5">
-                {items.rate}
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
               </Typography>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              {!users ? (
-                <Typography className={classes.typography} variant="h6">
-                  By clicking on the{' '}
-                  <span style={{ color: '#000000' }}>Shop Now</span> button, A
-                  "LOGIN" form will appear to get your information. Then after
-                  you have Submitted your information, it will be delivered to
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
                   us. We will call you for further details about the product
                   like : <br /> (Sizes, Quantity, Wood, Texture etc.)
                 </Typography>
-              ) : (
-                <Typography className={classes.typography} variant="h6">
-                  By clicking on the{' '}
-                  <span style={{ color: '#000000' }}>Shop Now</span> button,
-                  We will call you for further details about the product like
-                  : <br /> (Sizes, Quantity, Wood, Texture etc.)
-                </Typography>
-              )}
+            
             </ThemeProvider>
           </div>
+
+
+
+
+
+
+
+
+
+
+
           <div className="Buttons">
-            {/* <button
-              style={{
-                backgroundColor: color === 1 ? 'black' : '',
-                color: color === 1 ? 'white' : 'black',
-              }}
-              onMouseOver={() => Selectcolor(1)}
-              onMouseLeave={() => Selectcolor(false)}
-              onClick={()=>shopNow(items)}
-              className="Buttons__shopNow"
-            >
-              <span>
-                <ShoppingCartIcon
-                  style={{ color: color === 1 ? 'white' : 'black' }}
-                />
-              </span>{' '}
-              Shop Now
-            </button> */}
+     
             <button
               style={{
                 backgroundColor: color === 2 ? 'black' : '',
@@ -417,30 +489,138 @@ function ViewProduct() {
 
 
 
-
-{beds.map((items,i)=>{
+{tables.map((items,i)=>{
      return(
       items.key === productId &&
       <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={5}>
+        <Grid item item xs={12} sm={5}>
        
         <Carousel
               indicators={false}
               nextIcon={
-                <div className="nextIcon">
-                  <img src={Nexticon} alt="error" height="20px" width="20px" />
-                </div>
+                false
+               }
+               prevIcon={
+                false
+               }
+            >
+              <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+
+              {items.url2 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+              {items.url3 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+            </Carousel>
+     
+        </Grid>
+        <Grid item xs={1}></Grid>
+
+        <Grid item item xs={12} sm={4}>
+        <div id="detail" className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+            
+            </ThemeProvider>
+          </div>
+          <div className="Buttons">
+     
+            <button
+              style={{
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(2)}
+              onMouseLeave={() => Selectcolor(false)}
+              className="Buttons__WishList"
+            >
+              <span>
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
+              </span>{' '}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
+            </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </div>
+
+     )
+   })}
+
+
+
+{chairs.map((items,i)=>{
+     return(
+      items.key === productId &&
+      <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={12} sm={5}>
+       
+        <Carousel
+              indicators={false}
+              nextIcon={
+               false
               }
               prevIcon={
-                <img
-                  src={Previousicon}
-                  alt="error"
-                  height="30px"
-                  width="30px"
-                />
+               false
               }
             >
               <Carousel.Item>
@@ -474,56 +654,377 @@ function ViewProduct() {
             </Carousel>
      
         </Grid>
-        <Grid item xs={4}>
-          <div className={classes.detail}>
+        <Grid item xs={1}></Grid>
+
+        <Grid item xs={12} sm={4}>
+        
+          <div id="detail" className={classes.detail}>
             <ThemeProvider theme={theme}>
-              <Typography className={classes.typography} variant="h4">
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
                 {items.desc}
               </Typography>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              <Typography className={classes.typography} variant="h5">
-                {items.rate}
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
               </Typography>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
-              {!users ? (
-                <Typography className={classes.typography} variant="h6">
-                  By clicking on the{' '}
-                  <span style={{ color: '#000000' }}>Shop Now</span> button, A
-                  "LOGIN" form will appear to get your information. Then after
-                  you have Submitted your information, it will be delivered to
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
                   us. We will call you for further details about the product
                   like : <br /> (Sizes, Quantity, Wood, Texture etc.)
                 </Typography>
-              ) : (
-                <Typography className={classes.typography} variant="h6">
-                  By clicking on the{' '}
-                  <span style={{ color: '#000000' }}>Shop Now</span> button,
-                  We will call you for further details about the product like
-                  : <br /> (Sizes, Quantity, Wood, Texture etc.)
-                </Typography>
-              )}
+            
             </ThemeProvider>
           </div>
           <div className="Buttons">
-            {/* <button
+     
+            <button
               style={{
-                backgroundColor: color === 1 ? 'black' : '',
-                color: color === 1 ? 'white' : 'black',
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
               }}
-              onMouseOver={() => Selectcolor(1)}
+              onMouseOver={() => Selectcolor(2)}
               onMouseLeave={() => Selectcolor(false)}
-              onClick={()=>shopNow(items)}
-              className="Buttons__shopNow"
+              className="Buttons__WishList"
             >
               <span>
-                <ShoppingCartIcon
-                  style={{ color: color === 1 ? 'white' : 'black' }}
-                />
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
               </span>{' '}
-              Shop Now
-            </button> */}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
+            </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </div>
+
+     )
+   })}
+
+
+{dinnings.map((items,i)=>{
+     return(
+      items.key === productId &&
+      <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item item xs={12} sm={5}>
+       
+        <Carousel
+              indicators={false}
+              nextIcon={
+               false
+              }
+              prevIcon={
+               false
+              }
+            >
+              <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+
+              {items.url2 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+              {items.url3 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+            </Carousel>
+     
+        </Grid>
+        <Grid item xs={1}></Grid>
+
+        <Grid item item xs={12} sm={4}>
+    
+        <div id="detail" className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+            
+            </ThemeProvider>
+          </div>
+
+          <div className="Buttons">
+     
+            <button
+              style={{
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(2)}
+              onMouseLeave={() => Selectcolor(false)}
+              className="Buttons__WishList"
+            >
+              <span>
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
+              </span>{' '}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
+            </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </div>
+
+     )
+   })}
+
+
+{sofas.map((items,i)=>{
+     return(
+      items.key === productId &&
+      <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item item xs={12} sm={5}>
+       
+        <Carousel
+              indicators={false}
+              nextIcon={
+                false
+               }
+               prevIcon={
+                false
+               }
+            >
+              <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+
+       
+
+            </Carousel>
+     
+        </Grid>
+        <Grid item xs={1}></Grid>
+
+        <Grid item xs={12} sm={4}>
+         
+        <div id="detail" className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+            
+            </ThemeProvider>
+          </div>
+
+
+          <div className="Buttons">
+     
+            <button
+              style={{
+                backgroundColor: color === 2 ? 'black' : '',
+                color: color === 2 ? 'white' : 'black',
+              }}
+              onMouseOver={() => Selectcolor(2)}
+              onMouseLeave={() => Selectcolor(false)}
+              className="Buttons__WishList"
+            >
+              <span>
+                {(checkIfAdded(items.key) && (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistFalse(items)}
+                    style={{ color: 'red' }}
+                  />
+                )) || (
+                  <FavoriteBorderIcon
+                    onClick={() => _handleWishlistTrue(items)}
+                  />
+                )}
+              </span>{' '}
+              {(checkIfAdded(items.key) && (
+                <span onClick={() => _handleWishlistFalse(items)}>
+                  Remove From Wishlist
+                </span>
+              )) || (
+                <span onClick={() => _handleWishlistTrue(items)}>
+                  Add To Wishlist
+                </span>
+              )}
+            </button>
+          </div>
+        </Grid>
+
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </div>
+
+     )
+   })}
+
+
+
+{swings.map((items,i)=>{
+     return(
+      items.key === productId &&
+      <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}></Grid>
+        <Grid item item xs={12} sm={5}>
+       
+        <Carousel
+              indicators={false}
+              nextIcon={
+                false
+               }
+               prevIcon={
+                false
+               }
+            >
+              <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+
+              {items.url2 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+              {items.url3 &&
+                <Carousel.Item>
+                <img
+                  className="product__Image"
+                  src={items.url}
+                  alt={'picture'}
+                />
+              </Carousel.Item>
+              }
+
+            </Carousel>
+     
+        </Grid>
+        <Grid item xs={1}></Grid>
+
+        <Grid item item xs={12} sm={4}>
+  
+
+        <div id="detail" className={classes.detail}>
+            <ThemeProvider theme={theme}>
+              <Typography style={{color:"brown"}} id="MontserratSemiBold"  className={classes.typography} variant="h3">
+                {items.desc}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                Rs : {items.rate}
+              </Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+                <Typography id="MontserratRegular" style={{fontSize:"13px"}} className={classes.typography} variant="h6">
+                  By clicking on {' '}
+                  <span style={{ color: '#000000' }}>ADD TO WISHLIST</span> button, your item will save in wishlist ,after going in wishlist you can shop easily and it will be delivered to
+                  us. We will call you for further details about the product
+                  like : <br /> (Sizes, Quantity, Wood, Texture etc.)
+                </Typography>
+            
+            </ThemeProvider>
+          </div>
+
+
+
+
+
+
+          <div className="Buttons">
+     
             <button
               style={{
                 backgroundColor: color === 2 ? 'black' : '',

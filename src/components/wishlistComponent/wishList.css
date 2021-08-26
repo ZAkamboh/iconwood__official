@@ -1,0 +1,45 @@
+/* mobile  */
+@media only screen and (min-width:1px) and (max-width:480px){
+    .Buttons__shopNow {
+        border-radius: 2px;
+    
+        border: 1px solid;
+        margin-top: 10px;
+        box-shadow: none;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 12px;
+        
+      }
+    
+      .Buttons__WishList {
+        border-radius: 2px;
+        /* height: 40px; */
+        border: 1px solid;
+        margin-top: 10px;
+        box-shadow: none;
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 10px;
+    
+      }
+
+      .product__Image{
+        object-fit:contain;
+        width: 100% !important;
+        padding: 18px !important;
+      }
+
+      #wishlistMain{
+          padding-bottom: 10px !important;
+      }
+      #detail{
+      margin-top: -15% !important;
+      padding-right: 50px !important;
+      }
+  }
+  
+  /* tablet  */
+  @media only screen and (min-width:1px) and (max-width: 999px){
+ 
+  }

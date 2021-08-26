@@ -1,12 +1,104 @@
-.frame1-sec5 {
-    overflow: hidden;
+
+
+@font-face {
+  font-family:'Montserrat-Regular';
+  src: local('Montserrat-Regular'), url(../../../assets/fonts/Montserrat-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family:'Montserrat-SemiBold';
+  src: local('Montserrat-SemiBold'), url(../../../assets/fonts/Montserrat-SemiBold.otf) format('truetype');
+}
+
+
+.MontserratRegular{
+  font-family: Montserrat-Regular;
   }
-  .image1-sec5 img {
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -ms-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+
+  #MontserratRegular{
+    font-family: Montserrat-Regular;
+    }
+
+  .MontserratSemiBold{
+  font-family: Montserrat-SemiBold;
+
   }
-  .image1-sec5 img:hover {
-    width: 100%;
+
+  #MontserratSemiBold{
+    font-family: Montserrat-SemiBold;
+  
+    }
+  
+    .readMoreButton:hover{
+     background:#9f7757 !important;
+     color:white
+    }
+
+
+.imageOpacity{
+  opacity: 0.2px;
+  cursor: pointer;
+}
+
+
+#section5{
+  padding-top: 100px;
+
+  padding-bottom: 50px;
+}
+
+.slanted2 {
+  /* background-color: #3b3c43; */
+  /* background: linear-gradient(45deg, #CA6F1E 30%, #FF8E53 90%); */
+  height: 300px;
+  opacity: 0.9;
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 0%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 66%, 0 100%); 
+}
+
+.headText{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width:100%;
+  margin-top: 25px;
+}
+
+
+
+
+
+
+/* mobile  */
+@media only screen and (min-width:1px) and (max-width:480px){
+  #section5{
+    padding-top: 0px !important;
+    padding-bottom: 0px;
   }
+  .headForMobile{
+    padding-top: 10px !important;
+
+    font-size: 25px !important;
+  }
+  .paraForMobile{
+    font-size: 12px !important;
+    line-height: 0px;
+    width:82% !important;
+  }
+
+  .readMoreButton{
+    font-size: 10px !important;
+    margin-top: 5% !important;
+  }
+  .section3{
+    margin-top: 0px !important;
+  }
+}
+
+/* tablet  */
+@media only screen and (min-width:1px) and (max-width: 999px){
+
+}
+
+

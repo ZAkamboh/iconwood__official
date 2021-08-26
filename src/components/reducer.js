@@ -4,8 +4,10 @@ export const initialState = {
   Userorders:[],
   section4Items: [],
   section5Items: [],
-  section1Items: [],
+  LandingBanners: [],
   section2Items: [],
+  section3Items: [],
+  contact:[],
   bedsData: [],
   chairsData:[],
   sofasData:[],
@@ -15,7 +17,7 @@ export const initialState = {
   users: null,
   viewProducImage:[],
   allorders:[],
-  allusers:[]
+  allusers:[],
 
 }
 
@@ -31,17 +33,34 @@ const reducer = (state, action) => {
         section4Items: action.payload,
       }
 
+      
 
-      case 'SECTION1_DATA':
+      case 'CONTACT':
         return {
           ...state,
-          section1Items: action.payload,
+          contact: action.payload,
         }
+
+
+      case 'Landing_bannners_DATA':
+        return {
+          ...state,
+          LandingBanners: action.payload,
+        }
+
+
         case 'SECTION2_DATA':
           return {
             ...state,
             section2Items: action.payload,
           }
+
+
+          case 'SECTION3_DATA':
+            return {
+              ...state,
+              section3Items: action.payload,
+            }
 
       case 'SECTION5_DATA':
         return {
@@ -132,9 +151,12 @@ const reducer = (state, action) => {
         users: action.payload
       }
 
+     
+
     default:
       return state
   }
+  
 }
 
 export default reducer

@@ -1,0 +1,31 @@
+.MuiBottomNavigationAction-label.Mui-selected {
+    font-size: 0.675rem !important;
+}
+
+@font-face {
+    font-family:'Montserrat-SemiBold';
+    src: local('Montserrat-SemiBold'), url(../../../assets/fonts/Montserrat-SemiBold.otf) format('truetype');
+  }
+.productItems{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 10px;
+    font-family:'Montserrat-SemiBold';
+    color: grey;
+    width: 100%;
+
+}
+.productItems:hover{
+    width: 100%;
+ 
+    background-color: #9f7757;
+
+}
+
+@media only screen and (min-width:1px) and (max-width:330px){
+    #mobileHome{
+   display: none !important;
+    }
+
+   
+    }

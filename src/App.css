@@ -1,4 +1,22 @@
 
+::-webkit-scrollbar{
+   width:8px;
+}
+
+::-webkit-scrollbar-track{
+   background-color: grey;
+}
+
+::-webkit-scrollbar-thumb{
+   background-image: linear-gradient(black,white,black);
+   border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+   background-image: linear-gradient(white,black,white);
+   border-radius: 25px;
+}
+
 
 .navbar__app{
 position: sticky;
@@ -7,6 +25,14 @@ width: 100%;
 top: 0%;
 z-index: 100;
 background-color: #56574f;
+}
+
+.mobile_top_Bar{
+   display: none;
+}
+
+.mobile_top_admin{
+   display: none;
 }
 
 @media only screen and (min-width:1px) and (max-width:1023px){
@@ -21,8 +47,22 @@ background-color: #56574f;
 
     .mobile__navbar{
         overflow: hidden !important;
- 
+        
      }
+
+     .mobile_top_Bar{
+      position: sticky;
+      left: 0%;
+      width: 100%;
+      top: 0%;
+      z-index: 100;
+      background-color: #56574f;
+      display: block;
+   }
+
+   .mobile_top_admin{
+      display: block;
+   }
 }
 
 @media only screen and (min-width:1024px) and (max-width:3000px){

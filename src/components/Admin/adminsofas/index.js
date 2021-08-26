@@ -67,6 +67,7 @@ function AdminSofas() {
             }
 
 
+            values1.sort((a, b) => a - b).reverse()
 
             dispatch({
                 type: 'SOFAS',
@@ -187,7 +188,7 @@ function AdminSofas() {
 
                     })
 
-                    history.replace('/AdminHome')
+                    history.replace('/adminSofas')
 
                 })
                 .catch(error => {
@@ -216,7 +217,8 @@ function AdminSofas() {
                     <h5>Rate</h5>
                     <input
                         value={rate}
-                        type="number"
+                        type="text"
+
                         onChange={(e) => setrate(e.target.value)}
                     />
 

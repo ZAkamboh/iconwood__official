@@ -9,6 +9,8 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import HeartRed from '../../assets/landingPage/icons/heart.png'
 import { useStateValue } from '../StateProvider'
+import ClipLoader from "react-spinners/ClipLoader";
+import { BackServer } from "../../components/Services"
 
 import { auth, database } from '../../database'
 import Nexticon from '../../assets/icons/nexticon2.png'
@@ -21,13 +23,17 @@ import axios from 'axios'
 import './wishList.css'
 
 const useStyles = makeStyles((theme) => ({
+
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    marginBottom: '5%',
-    paddingTop: "2%"
-
+    paddingTop: "1%",
+    marginTop: "2%",
+    paddingBottom: "100px",
+    backgroundColor: "#eeede9",
   },
+
+
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
@@ -38,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     paddingLeft: '50px',
+    marginTop: "10px",
+    fontFamily: "italic"
   },
   typography: {
     marginTop: '20px',
@@ -46,6 +54,18 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid grey',
     paddingTop: '10px',
     paddingBottom: '20px',
+  },
+  typography2: {
+    marginTop: '20px',
+    fontWeight: 'bolder',
+    textAlign: 'justify',
+    borderBottom: '1px solid grey',
+    paddingTop: '10px',
+    paddingBottom: '20px',
+    wordSpacing: "-2px",
+    fontSize: "13px",
+    color: '#e36c02',
+
   },
 }))
 
@@ -62,8 +82,12 @@ theme.typography.h3 = {
 }
 
 function Wishlist() {
-  const [{ users, wishlist, Userorders }, dispatch] = useStateValue()
+  const [{ users, wishlist, Userorders,allUsersData }, dispatch] = useStateValue()
   const [section4Items, setsection4Items] = useState([])
+  const [processing, setProcessing] = useState(false)
+  const [succeeded, setSucceeded] = useState(false)
+  const [disabled, setDisabled] = useState(true)
+
   const classes = useStyles()
   const location = useLocation()
   const history = useHistory()
@@ -75,37 +99,28 @@ function Wishlist() {
   useEffect(() => {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
-   
+
 
   }, [])
 
-  useEffect(() => {
-   
-    var values = []
-    database.ref(`Section4Data`).once('value', (snap) => {
-      var fetchData = snap.val()
-      for (let keys in fetchData) {
-        values.push({ ...fetchData[keys], key: keys })
-      }
 
-      setsection4Items(values)
-    })
+  useEffect(() => {
+
+
     var usersfromlocalstorage = JSON.parse(
       localStorage.getItem('users'),
     )
+
     if (usersfromlocalstorage) {
 
       axios
-        .post(`http://localhost:8080/data/getUserOrders/${usersfromlocalstorage._id}`)
+        .post(`${BackServer}/data/getUserOrders/${usersfromlocalstorage._id}`)
         .then((res) => {
           dispatch({
             type: "SHOPNOW",
             payload: res.data.order
           })
         })
-
-
-
 
     }
 
@@ -180,6 +195,8 @@ function Wishlist() {
     }
 
     else {
+
+      setProcessing(true)
       var orderData = {
         title: i.title,
         desc: i.desc,
@@ -188,25 +205,32 @@ function Wishlist() {
         wishlist: i.wishlist,
         key: i.key,
         userId: users._id,
-        username:users.name,
-        useremail:users.email,
-        usercontact:users.contact,
-        trackingid:Math.floor(Math.random() * 100000000000000),
+        username: users.name,
+        useremail: users.email,
+        usercontact: users.contact,
+        trackingid: Math.floor(Math.random() * 100000000000000),
         status: "Pending",
         orderDate: new Date().toLocaleDateString('de-DE'),
-        key:i.key
+        key: i.key,
+
       }
+
       axios
-        .post(`http://localhost:8080/data/UserOrders`, orderData)
+        .post(`${BackServer}/data/UserOrders`, orderData)
         .then((res) => {
-          alert("succussfully order done")
-          
+
+          alert("Order Succussfully Placed")
+          setProcessing(false)
+
+          document.body.scrollTop = 0
+          document.documentElement.scrollTop = 0
 
           axios
-          .post(`http://localhost:8080/data/UserOrdersAdmin`, orderData)
-          .then((res) => {
-            alert('email send to admin')
-          })
+            .post(`${BackServer}/data/UserOrdersAdmin`, orderData)
+            .then((res) => {
+              alert('We will Contact You Soon..Thanku')
+
+            })
           const wishlistRemoveData = {
             title: i.title,
             desc: i.desc,
@@ -232,11 +256,11 @@ function Wishlist() {
             type: 'REMOVE_FROM_BASKET',
             payload: newRemoveArray2,
           })
-     
-            
+
+
 
         })
-   
+
     }
 
   }
@@ -262,28 +286,20 @@ function Wishlist() {
   return (
     <div>
 
-      {wishlist && wishlist.length === 0 || !wishlist  ? <div style={{ height: "350px", justifyContent: "center", alignItems: "center", display: "flex" }}><h1>No Item In Wishlist</h1></div> : wishlist && wishlist.map((items, i) => {
+      {wishlist && wishlist.length === 0 || !wishlist ? <div id="MontserratSemiBold" style={{ height: "650px", backgroundColor: "#eeede9", color: "grey", justifyContent: "center", alignItems: "center", display: "flex" }}><h3>No Item In Wishlist</h3></div> : wishlist && wishlist.map((items, i) => {
         return (
-          <div className={classes.root}>
+          <div id="wishlistMain" className={classes.root}>
             <Grid container spacing={3}>
               <Grid item xs={1}></Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={5}>
+              <Grid item xs={12} sm={5}>
 
                 <Carousel
                   indicators={false}
                   nextIcon={
-                    <div className="nextIcon">
-                      <img src={Nexticon} alt="error" height="20px" width="20px" />
-                    </div>
+                    false
                   }
                   prevIcon={
-                    <img
-                      src={Previousicon}
-                      alt="error"
-                      height="30px"
-                      width="30px"
-                    />
+                    false
                   }
                 >
                   <Carousel.Item>
@@ -317,21 +333,23 @@ function Wishlist() {
                 </Carousel>
 
               </Grid>
-              <Grid item xs={4}>
-                <div className={classes.detail}>
+              <Grid item xs={1}></Grid>
+
+              <Grid item xs={12} sm={4}>
+                <div id="detail" className={classes.detail}>
                   <ThemeProvider theme={theme}>
-                    <Typography className={classes.typography} variant="h4">
+                    <div id="MontserratSemiBold" className={classes.typography2} variant="h3">
                       {items.desc}
-                    </Typography>
+                    </div>
                   </ThemeProvider>
                   <ThemeProvider theme={theme}>
-                    <Typography className={classes.typography} variant="h5">
-                      {items.rate}
+                    <Typography id="MontserratSemiBold" className={classes.typography} variant="h5">
+                      Rs : {items.rate}
                     </Typography>
                   </ThemeProvider>
                   <ThemeProvider theme={theme}>
                     {!users ? (
-                      <Typography className={classes.typography} variant="h6">
+                      <Typography id="MontserratRegular" style={{ fontSize: "13px" }} className={classes.typography} variant="h6">
                         By clicking on the{' '}
                         <span style={{ color: '#000000' }}>Shop Now</span> button, A
                   "LOGIN" form will appear to get your information. Then after
@@ -340,17 +358,18 @@ function Wishlist() {
                   like : <br /> (Sizes, Quantity, Wood, Texture etc.)
                       </Typography>
                     ) : (
-                        <Typography className={classes.typography} variant="h6">
-                          By clicking on the{' '}
-                          <span style={{ color: '#000000' }}>Shop Now</span> button,
+                      <Typography id="MontserratRegular" style={{ fontSize: "13px" }} className={classes.typography} variant="h6">
+                        By clicking on the{' '}
+                        <span style={{ color: '#000000' }}>Shop Now</span> button,
                   We will call you for further details about the product like
                   : <br /> (Sizes, Quantity, Wood, Texture etc.)
-                        </Typography>
-                      )}
+                      </Typography>
+                    )}
                   </ThemeProvider>
                 </div>
                 <div className="Buttons">
                   <button
+                    disabled={processing && disabled}
                     style={{
                       backgroundColor: color === 1 ? 'black' : '',
                       color: color === 1 ? 'white' : 'black',
@@ -360,13 +379,26 @@ function Wishlist() {
                     onClick={() => shopNow(items)}
                     className="Buttons__shopNow"
                   >
-                    <span>
-                      <ShoppingCartIcon
-                        style={{ color: color === 1 ? 'white' : 'black' }}
+
+                    {!processing ?
+
+                      <span>
+                        <ShoppingCartIcon
+                          style={{ color: color === 1 ? 'white' : 'black' }}
+                        />
+                      Shop Now
+                    </span>
+
+                      :
+
+                      <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>      <ClipLoader color={"red"}
                       />
-                    </span>{' '}
-              Shop Now
-            </button>
+                      </span>
+
+
+                    }
+
+                  </button>
                   <button
                     style={{
                       backgroundColor: color === 2 ? 'black' : '',

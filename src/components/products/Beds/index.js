@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
-import Chair from '../../../assets/landingPage/section4/chair.jpg'
-import Sitetable from '../../../assets/landingPage/section4/sitetable.jpg'
-import Sofa from '../../../assets/landingPage/section4/sofa.jpg'
+import Truncate from 'react-truncate';
+
 import Fade from 'react-reveal/Fade'
 import { auth, storage, db, database } from '../../../database'
 
 import HeartRed from '../../../assets/landingPage/icons/heart.png'
 import HeartWhite from '../../../assets/landingPage/icons/heartwhite.png'
 
-import Section1B from '../../../assets/landingPage/section2/section2b.jpg'
-import Section1C from '../../../assets/landingPage/section2/section2c.jpg'
+
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 
 import { Link, useHistory } from 'react-router-dom'
@@ -25,7 +23,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'hidden',
-    marginTop: '2%',
+    width:"100%",
+    paddingTop:"50px",
+    paddingBottom:"130px",
+    display:"flex",
+    justifyContent:"center",
+    backgroundColor: "#9f77574d",
   },
   paper: {
     padding: theme.spacing(2),
@@ -42,6 +45,14 @@ function Beds(props) {
   const [wishlistWithInFunc, setwishlistWithInFunc] = useState(false)
   const classes = useStyles()
 
+
+
+  useEffect(() => {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+   
+
+  }, [])
   useEffect(() => {
     var values = []
     database.ref(`beds`).once('value', (snap) => {
@@ -50,6 +61,7 @@ function Beds(props) {
         values.push({ ...fetchData[keys], key: keys })
       }
 
+      values.sort((a, b) => a - b).reverse()
 
       dispatch({
         type: 'BEDS',
@@ -126,17 +138,14 @@ function Beds(props) {
   }
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
-        {bedsData &&
-          bedsData.map((item, i) => {
-            return (
-              <Grid key={item} item xs={3}>
-                <Paper id="item__Wrapper" className={classes.paper}>
-                  <div>
-                    <div className="wishlistAndproductname">
-                      <div>{item.title}</div>
-
-                      <div className="wishlistIcon">
+    <Grid style={{width:"100%"}} container spacing={3}>
+      {bedsData &&
+        bedsData.map((item, i) => {
+          return (
+            <Grid key={item} item xs={12} sm={3}>
+              <Paper id="item__Wrapper" className={classes.paper}>
+              <div style={{display:"flex",padding:"5px"}}>
+                  <div  style={{paddingBottom:"5px"}}>
                         {(checkIfAdded(item.key) && (
                           <FavoriteBorderIcon
                             onClick={() => _handleWishlistFalse(item)}
@@ -149,54 +158,67 @@ function Beds(props) {
                         )}
                       </div>
 
-                   
-                        <div
+                      <div
                           onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}
                           className="visibility"
                         >
-                          <Visibility />
+                          <Visibility style={{color:"red"}} />
                         </div>
-                    </div>
+                  </div>
+             
+                  <div >
+                    <div  style={{height:"45vh", backgroundColor: "#9f77574d",}}>
+                 
+
                     <img
+                    style={{width:"100%",height:"45vh",objectFit:"cover"}}
                         onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}
                       src={item.url}
-                      width="100%"
+                    
                     />
-                    <Fade bottom delay={1000}>
-                      <div>
-                        <div className="title">{item.title}</div>
-                        <div className="desc">{item.desc}</div>
-                        <div className="rate">{item.rate}</div>
-                        <div className="viewProductandWishList__Main">
-                          <div
-                            onClick={() =>
-                              history.push({ pathname: `${item.title}` })
-                            }
-                          >
-                            {' '}
-                            View Products
-                          </div>
-                          <div style={{ color: 'grey' }}>
-                            {(checkIfAdded(item.key) && (
-                              <span onClick={() => _handleWishlistFalse(item)}>
-                                Remove From Wishlist
-                              </span>
-                            )) || (
-                              <span onClick={() => _handleWishlistTrue(item)}>
-                                Add To Wishlist
-                              </span>
-                            )}
-                          </div>
+                    
+                    </div>
+                        
+                  
+
+                   
+                  <Fade bottom >
+                    <div>
+                      <div className="title MontserratSemiBold">{item.title}</div>
+                      <Truncate className="desc MontserratRegular"  lines={1} ellipsis={<div  onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}  style={{color:"red",cursor:"pointer"}} className="desc MontserratSemiBold"   >Read more...</div>}>
+                        {item.desc}
+                        </Truncate>
+                      <div className="rate MontserratRegular">Rs : {item.rate}</div>
+                      <div className="viewProductandWishList__Main">
+                        <div className="MontserratSemiBold"
+                      onClick={() => window.open(`${Server}/ViewProduct?productId=${item.key}`, '_blank')}
+                      
+                        >
+                          {' '}
+                          View Product
+                        </div>
+                        <div  style={{ color: 'green' }}>
+                          {(checkIfAdded(item.key) && (
+                       
+                        <span  className="MontserratSemiBold" style={{fontSize:"12px"}}  onClick={() => _handleWishlistFalse(item)}>
+                              Remove From Wishlist
+                            </span>
+                          )) || (
+                            <span onClick={() => _handleWishlistTrue(item)}>
+                              Add To Wishlist
+                            </span>
+                          )}
                         </div>
                       </div>
-                    </Fade>
-                  </div>
-                </Paper>
-              </Grid>
-            )
-          })}
-      </Grid>
-    </div>
+                    </div>
+                  </Fade>
+                </div>
+              </Paper>
+            </Grid>
+          )
+        })}
+    </Grid>
+  </div>
   )
 }
 

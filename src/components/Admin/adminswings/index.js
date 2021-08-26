@@ -67,6 +67,7 @@ function AdminSwings() {
             }
 
 
+            values1.sort((a, b) => a - b).reverse()
 
             dispatch({
                 type: 'SWINGS',
@@ -187,7 +188,7 @@ function AdminSwings() {
 
                     })
 
-                    history.replace('/AdminHome')
+                    history.replace('/adminSwings')
 
                 })
                 .catch(error => {
@@ -216,7 +217,8 @@ function AdminSwings() {
                     <h5>Rate</h5>
                     <input
                         value={rate}
-                        type="number"
+                        type="text"
+
                         onChange={(e) => setrate(e.target.value)}
                     />
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+import logo from "../../../assets/icons/logo.png"
 
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -32,6 +33,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import clsx from 'clsx';
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import HomeIcon from '@material-ui/icons/Home';
+import { BackServer } from "../../Services"
 
 import { useStateValue } from '../../StateProvider'
 
@@ -43,7 +45,7 @@ const useStyles = makeStyles({
     bottom: "0%",
   },
   list: {
-    width: 380,
+    width: 340,
   },
   fullList: {
     width: "auto",
@@ -62,7 +64,7 @@ export default function LabelBottomNavigation() {
     right: false,
   });
 
-  const [value, setValue] = React.useState('recents');
+  const [value, setValue] = React.useState('Home');
   const [{ wishlist, Userorders, users, allorders }, dispatch] = useStateValue()
   const [expand1Icon, setExpand1Icon] = useState(false);
   const [expand2Icon, setExpand2Icon] = useState(false);
@@ -84,6 +86,8 @@ export default function LabelBottomNavigation() {
 
   }
 
+
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event &&
@@ -104,13 +108,16 @@ export default function LabelBottomNavigation() {
     setState({ ...state, [anchor]: open });
   };
 
-  const handleClick = (value,links) => {
+  const handleClick = (value, links, fff) => {
     setDrawerOpen(value);
+    setExpand1Icon(fff)
     setState({ ...state, right: value });
-    if(links){
+    if (links) {
       history.push(links)
 
     }
+
+
   }
 
   const list = (anchor) => (
@@ -119,65 +126,38 @@ export default function LabelBottomNavigation() {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
-    // onClick={toggleDrawer(anchor, false)}
-    // onKeyDown={toggleDrawer(anchor, false)}
+
     >
       <List style={{ padding: 10 }}>
 
-     
-        <ListItem  button style={{ backgroundColor: '#d50000', height: 55 }}>
+
+        <ListItem button style={{ backgroundColor: '#9f7757', height: 55 }}>
           <ListItemText style={{ color: "#ffffff" }}><span style={{ fontWeight: "bold", fontSize: "15px" }}><BuildIcon style={{ fontSize: "14px" }} /> Icon Wood</span></ListItemText>
           <ListItemIcon ><CloseIcon onClick={() => handleClick(false, null)} style={{ fontSize: 20, color: "#ffffff", marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
         </ListItem>
-        <ListItem onClick={()=>setValue2(1)} button style={{ border: value2===1 && "2px solid #d50000", marginTop: 6, height: 55 }}>
-          <ListItemText style={{ color: "#d50000" }}><span style={{ fontWeight: "bold", fontSize: "14px" }}>Find Location</span></ListItemText>
+        <ListItem onClick={() => window.open('https://goo.gl/maps/kWMdRfwtdG7wwaqAA', '_blank')} button style={{ border: value2 === 1 && "2px solid #9f7757", marginTop: 6, height: 55 }}>
+          <ListItemText style={{ color: "#9f7757" }}><span style={{ fontWeight: "bold", fontSize: "14px" }}>Find Location</span></ListItemText>
           <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
         </ListItem>
-        <ExpansionPanel  style={{border: value2===2 && "2px solid #d50000", marginTop: 10, boxShadow: "none" }} id="DrawerShoppingToolsMenu" onChange={(event, expanded) => { setExpand1Icon(expanded) }}>
+        <ExpansionPanel style={{ border: value2 === 2 && "2px solid #9f7757", marginTop: 10, boxShadow: "none" }} id="DrawerShoppingToolsMenu" onChange={(event, expanded) => { setExpand1Icon(expanded) }}>
           <ExpansionPanelSummary
-            expandIcon={expand1Icon ? <RemoveIcon style={{ fontSize: 20, color: expand1Icon ? "red" : "" }} /> : <AddIcon style={{ fontSize: 20 }} />}
+            expandIcon={expand1Icon ? <RemoveIcon style={{ fontSize: 20, color: expand1Icon ? "#9f7757" : "" }} /> : <AddIcon style={{ fontSize: 20 }} />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px", color: expand1Icon ? "red" : "" }}>Products</span></ListItemText>
+            <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px", color: expand1Icon ? "#9f7757" : "" }}>Products</span></ListItemText>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
+
+
             <div>
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Dinning Tables</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
 
-
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Center Tables</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
-
-
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Chairs</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
-
-
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Beds</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
-
-
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Swings</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
-
-
-              <ListItem button id="DrawerDodgeGarageMenu" style={{ marginTop: 10 }}>
-                <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Sofas</span></ListItemText>
-                <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "10px" }} /></ListItemIcon>
-              </ListItem>
-
+              <div onClick={() => handleClick(false, "/chairs")} className="productItems">Chairs</div>
+              <div onClick={() => handleClick(false, "/sofas")} className="productItems">Sofas</div>
+              <div onClick={() => handleClick(false, "/dinnings")} className="productItems">Dininings</div>
+              <div onClick={() => handleClick(false, "/centerTables")} className="productItems">Tables</div>
+              <div onClick={() => handleClick(false, "/swings")} className="productItems">Swings</div>
+              <div onClick={() => handleClick(false, "/beds")} className="productItems">Beds</div>
 
             </div>
 
@@ -185,44 +165,48 @@ export default function LabelBottomNavigation() {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <Divider />
-        <ListItem onClick={()=>setValue2(3)}  button id="DrawerDodgeGarageMenu" style={{ marginTop: 10,border: value2===3 && "2px solid #d50000" }}>
+        <ListItem onClick={() => handleClick(false, "/contact", 3)} button id="DrawerDodgeGarageMenu" style={{ marginTop: 10, border: value2 === 3 && "2px solid #9f7757" }}>
           <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Contact Us</span></ListItemText>
           <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
         </ListItem>
 
         <Divider />
-        <ListItem onClick={()=>setValue2(4)} button style={{ marginTop: 10,border: value2===4 && "2px solid #d50000" }}>
+        <ListItem onClick={() => handleClick(false, "/about", 4)} button style={{ marginTop: 10, border: value2 === 4 && "2px solid #9f7757" }}>
           <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>About Us</span></ListItemText>
           <ListItemIcon><ArrowForwardIosIcon style={{ fontSize: 20, marginLeft: "39px", fontSize: "17px" }} /></ListItemIcon>
         </ListItem>
         <Divider />
         <ListItem onClick={() => handleClick(false, "/")} >
-          <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>Icon Wood</span></ListItemText>
+          <ListItemText><span style={{ fontWeight: "bold", fontSize: "12px" }}>iconwood</span><span style={{ fontWeight: "bold", fontSize: "6px" }}> By 'Al Madina Furniture'</span></ListItemText>
         </ListItem>
       </List>
+
+      <div onClick={() => handleClick(false, "/")} style={{ display: "flex", justifyContent: "center", paddingBottom: "50px" }}>
+        <img src={logo} width="25%" />
+      </div>
     </div>
   );
 
   return (
 
-    <BottomNavigation showLabels={true} value={value} onChange={handleChange} className={classes.root}>
-      <BottomNavigationAction onClick={() => history.push('/')} style={{ color: value === "Home" ? "red" : "black" }} label="Home" value="Home" icon={<HomeIcon />} />
+    <BottomNavigation id="mobileRoot" showLabels={true} value={value} onChange={handleChange} className={classes.root}>
+      <BottomNavigationAction id="mobileHome" onClick={() => history.push('/')} style={{ color: location.pathname === "/" ? "red" : "black", fontSize: "5px" }} label="Home" value="Home" icon={<HomeIcon />} />
 
       {users === null ? (
-        <BottomNavigationAction onClick={() => history.push('/User_Login')} style={{ color: value === "Login" ? "red" : "black" }} label="Login" value="Login" icon={<PersonAddIcon />} />
+        <BottomNavigationAction onClick={() => history.push('/User_Login')} style={{ color: value === "Login" ? "black" : "black" }} label="Login" value="Login" icon={<PersonAddIcon />} />
 
       ) : (
 
-        <BottomNavigationAction onClick={signoutMethod} style={{ color: value === "Login" ? "red" : "black" }} label="Sign Out" value="Login" icon={<PersonAddIcon />} />
+        <BottomNavigationAction onClick={signoutMethod} style={{ color: value === "Login" ? "black" : "black" }} label="Sign Out" value="Login" icon={<PersonAddIcon />} />
 
       )}
+      
       {users !== null &&
         <BottomNavigationAction onClick={() => history.push('/User_Orders')} style={{ color: value === "Shops" ? "red" : "black" }} label={`Orders ${Userorders === null ? 0 : Userorders.length}`} value="Shops" icon={<ShopIcon />} />}
-      <BottomNavigationAction onClick={() => history.push('/wishlist')} style={{ color: value === "Wishlist" ? "red" : "black" }} label={`Wishlist ${wishlist === null ? 0 : wishlist.length}`} value="Wishlist" icon={<FavoriteIcon />} />
-      <BottomNavigationAction onClick={toggleDrawer("right", true)} style={{ color: value === "Menu" ? "red" : "black" }} label="Menu" value="Menu" icon={<MenuIcon />} />
+      <BottomNavigationAction onClick={() => history.push('/wishlist')} style={{ color: location.pathname === "/wishlist"  ? "red" : "black", fontSize: "5px" }} label={`Wishlist ${wishlist === null ? 0 : wishlist.length}`} value="Wishlist" icon={<FavoriteIcon />} />
+      <BottomNavigationAction onClick={toggleDrawer("right", true)} style={{ color: value === "Menu" ? "black" : "black" }} label="Menu" value="Menu" icon={<MenuIcon />} />
       <div>
 
-        {/* <BottomNavigationAction onClick={toggleDrawer("left", true)}  style={{color:value === "Menu" ? "red" :"black"}}  label="Menu" value="Menu" icon={<MenuIcon />} /> */}
 
         {['right'].map((anchor) => (
           <React.Fragment key={anchor}>
@@ -234,5 +218,7 @@ export default function LabelBottomNavigation() {
         ))}
       </div>
     </BottomNavigation>
+
+
   );
 }

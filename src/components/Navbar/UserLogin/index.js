@@ -5,6 +5,10 @@ import { auth, db, database } from '../../../database'
 import { useStateValue } from '../../StateProvider'
 import createBrowserHistory from "history/createBrowserHistory";
 import axios from 'axios'
+import logo from "../../../assets/icons/logo.png"
+import ClipLoader from "react-spinners/ClipLoader";
+import PropagateLoader from "react-spinners/PropagateLoader";
+import { BackServer } from "../../Services"
 
 function Login() {
   const history = useHistory()
@@ -16,6 +20,11 @@ function Login() {
   const [contact, setcontact] = useState('')
   const [inputSelector, setinputSelector] = useState('signIn')
   const [{ users }, dispatch] = useStateValue()
+  const [processing, setProcessing] = useState(false)
+  const [disabled, setDisabled] = useState(true)
+
+  const [processing2, setProcessing2] = useState(false)
+  const [disabled2, setDisabled2] = useState(true)
   var previousLocation = location.state === 'previousLocation' && location.state.previousLocation
   // var items = location.state.item
 
@@ -27,6 +36,7 @@ function Login() {
 
     if (inputSelector === 'signIn') {
       e.preventDefault()
+
       if (email === "") {
         alert("Enter Email")
       }
@@ -34,45 +44,60 @@ function Login() {
         alert("Enter Password")
       }
 
-      var loginData = {
-        email: email,
-        password: password,
-      }
-      axios
-        .post(`http://localhost:8080/data/login`, loginData)
-        .then((res) => {
+      else {
 
-          if (res.data.success !== true) {
-            alert(JSON.stringify(res.data.error))
-          }
+        setProcessing(true)
 
+        var loginData = {
+          email: email,
+          password: password,
+        }
 
-          else {
-            localStorage.setItem('users', JSON.stringify(res.data.user))
-            var users = JSON.parse(localStorage.getItem('users'))
-            if (users) {
-              dispatch({
-                type: 'SET_USER',
-                payload: users,
-              })
-            } else {
-              dispatch({
-                type: 'SET_USER',
-                payload: null,
-              })
+        axios
+          // .post(`https://iconwood.herokuapp.com/data/login`, loginData)
+          .post(`${BackServer}/data/login`, loginData)
+
+         
+          .then((res) => {
+
+            if (res.data.success !== true) {
+              alert(JSON.stringify(res.data.error))
+              setProcessing(false)
+
             }
-            history.push('/')
-          }
-        })
+
+
+            else {
+              localStorage.setItem('users', JSON.stringify(res.data.user))
+              var users = JSON.parse(localStorage.getItem('users'))
+              // var users = res.data.user
+              if (users) {
+                dispatch({
+                  type: 'SET_USER',
+                  payload: users,
+                })
+              } else {
+                dispatch({
+                  type: 'SET_USER',
+                  payload: null,
+                })
+              }
+              history.push('/')
+              setProcessing(false)
+
+            }
+          })
+
+      }
 
     }
   }
 
   const register = (e) => {
     setinputSelector('Register')
+
     if (inputSelector === 'Register') {
       e.preventDefault()
-
 
 
       if (name === "" || email === "" || password === "" || contact === "") {
@@ -92,6 +117,8 @@ function Login() {
       }
 
       else {
+        setProcessing2(true)
+
         var userData = {
           name: name,
           email: email,
@@ -99,10 +126,14 @@ function Login() {
           contact: contact
         }
         axios
-          .post(`http://localhost:8080/data/signup`, userData)
+          // .post(`https://iconwood.herokuapp.com/data/signup`, userData)
+          .post(`${BackServer}/data/signup`, userData)
+
           .then((res) => {
             if (res.data.success !== true) {
               alert(JSON.stringify(res.data.error))
+              setProcessing2(false)
+
             }
             else {
               localStorage.setItem('users', JSON.stringify(res.data.user))
@@ -119,6 +150,8 @@ function Login() {
                 })
               }
               history.push('/')
+              setProcessing2(false)
+
             }
 
 
@@ -131,21 +164,24 @@ function Login() {
   return (
     <div className="User__login">
       <Link className="User__Form__logo" to="/">
-        <h1>Icon Wood</h1>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img className="Logo" src={logo} width="10%" />
+        </div>
+        {/* <h1 style={{ color: "white" }}>Icon Wood</h1> */}
       </Link>
       {inputSelector === 'signIn' && (
         <div className="User__login__container">
-          <h1>Sign-in</h1>
+          <h1 style={{ color: "white" }}>Sign-in</h1>
 
           <form>
-            <h5>E-mail</h5>
+            <h5 style={{ color: "white" }}>E-mail</h5>
             <input
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <h5>Password</h5>
+            <h5 style={{ color: "white" }}>Password</h5>
             <input
               type="password"
               value={password}
@@ -153,16 +189,37 @@ function Login() {
             />
 
             <button
+              disabled={processing && disabled}
               onClick={signIn}
               type="submit"
               className="User__login__signInButton"
             >
-              Sign In
+
+
+              {!processing ?
+
+                <span>
+                  Sign In
+              </span>
+
+                :
+
+                <span >
+                  <PropagateLoader color="red" width={100}
+
+                  />
+                </span>
+
+
+              }
+
             </button>
           </form>
 
-          <button onClick={register} className="User__login__registerButton">
+          <button disabled={processing2 && disabled2} onClick={register} className="User__login__registerButton">
+
             Create your Account
+
           </button>
         </div>
       )}
@@ -198,6 +255,30 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
+
+
+            <button
+              onClick={register}
+              className={
+                inputSelector === 'Register' && 'User__login__signInButton'
+              }
+            >
+
+              {!processing2 ?
+
+                <span onClick={register}>
+                  Create your Account
+                    </span>
+                :
+                <span>
+                  <PropagateLoader color="red" width={100}
+
+                  />
+                </span>
+              }
+            </button>
+
+
             <button
               onClick={signIn}
               type="submit"
@@ -211,14 +292,7 @@ function Login() {
             </button>
           </form>
 
-          <button
-            onClick={register}
-            className={
-              inputSelector === 'Register' && 'User__login__signInButton'
-            }
-          >
-            Create your Account
-          </button>
+
         </div>
       )}
     </div>

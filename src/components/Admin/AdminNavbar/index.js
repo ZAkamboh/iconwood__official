@@ -4,12 +4,17 @@ import { Link, useHistory } from 'react-router-dom'
 import { useStateValue } from '../../StateProvider'
 import { auth,database } from '../../../database'
 import axios from 'axios'
+import { BackServer } from "../../Services"
+
+import styled from "styled-components";
+import CompanyLogo from "../../../shared-components/company-logo";
+import { colors, Media } from "../../../shared-components";
 
 import { Drawer, Button, Radio, Space } from 'antd'
 import './adminnavbar.css'
 function AdminNavbar() {
   const history = useHistory()
-  const [{ basket, user,allorders  }, dispatch] = useStateValue()
+  const [{ basket, user,allorders,contact  }, dispatch] = useStateValue()
 
   useEffect(() => {
 
@@ -20,13 +25,32 @@ function AdminNavbar() {
 
     
       axios
-      .get(`http://localhost:8080/data/getUserAllOrdersAdmin`)
+      .get(`${BackServer}/data/getUserAllOrdersAdmin`)
       .then((res) => {
         dispatch({
           type: "ALLORDERS",
           payload: res.data.Allorder
         })
       })
+
+
+      var values1 = []
+
+      database.ref(`contact`).once('value', (snap) => {
+        var fetchData1 = snap.val()
+        for (let keys in fetchData1) {
+            values1.push({ ...fetchData1[keys], key: keys })
+        }
+
+
+
+        dispatch({
+            type: 'CONTACT',
+            payload: values1,
+        })
+
+
+    })
 
    
   }, [allorders])
@@ -38,6 +62,8 @@ function AdminNavbar() {
   const forhiddenBorder = () => {
     setstate(false)
   }
+
+  
   const handleAuthenticaton = () => {
     var logout=localStorage.removeItem("ADMIN");
     if(logout){
@@ -46,94 +72,125 @@ function AdminNavbar() {
     }
   }
 
+  const controlling = (route) => {
+    history.push(`${route}`);
+  };
+
   return (
-    <div className="Navbar__main__Admin" style={{ backgroundColor: '#56574f' }}>
-      <div className="logo__Admin">
-        <h1 className="navbar__title__Admin">Icon Wood</h1>
-      </div>
-      <div className="Navbar__content__Admin">
-        <div className="Navbar__content__inner__Admin">
-          <div
-            onMouseOver={() => forbottomborder(1)}
-            onMouseLeave={forhiddenBorder}
-            className={state === 1 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-            <Link style={{textDecoration:"none",color:"aliceblue"}} to="/Landingpage">Landing Page</Link>
-          </div>
+ 
 
-          <div
-            onMouseOver={() => forbottomborder(2)}
-            onMouseLeave={forhiddenBorder}
-            className={state === 2 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminBeds">Beds</Link>
+    <NavbarWrapper style={{backgroundColor:"#9f7757"}}>
+    <CompanyLogo />
+    <NabarMenus className="navbar__content">
+      <MenuItem onClick={() => controlling("/Landingpage")}>Landing Page</MenuItem>
+      <MenuItem onClick={() => controlling("/adminBeds")}>Beds</MenuItem>
+      <MenuItem onClick={() => controlling("/adminChairs")}>Chairs</MenuItem>
+      <MenuItem onClick={() => controlling("/centertabels")}>Center Tables</MenuItem>
+      <MenuItem onClick={() => controlling("/adminSofas")}>Sofa's</MenuItem>
 
-          </div>
-          <div
-            onMouseOver={() => forbottomborder(3)}
-            onMouseLeave={forhiddenBorder}
-            className={state == 3 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminChairs">Chairs</Link>
+      <MenuItem onClick={() => controlling("/adminDinnings")}>Dinning</MenuItem>
+      <MenuItem onClick={() => controlling("/adminSwings")}>Swings</MenuItem>
 
-          </div>
-          <div
-            onMouseOver={() => forbottomborder(4)}
-            onMouseLeave={forhiddenBorder}
-            className={state == 4 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/centertabels">Center Tables</Link>
 
-          </div>
-          <div
-            onMouseOver={() => forbottomborder(5)}
-            onMouseLeave={forhiddenBorder}
-            className={state === 5 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminSofas">Sofa's</Link>
-
-          </div>
-          <div
-            onMouseOver={() => forbottomborder(6)}
-            onMouseLeave={forhiddenBorder}
-            className={state === 6 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminDinnings">Dinning</Link>
-
-          </div>
-
-          <div
-            onMouseOver={() => forbottomborder(7)}
-            onMouseLeave={forhiddenBorder}
-            className={state === 7 ? 'borderBottom' : 'borderBottomHidden'}
-          >
-          <Link style={{textDecoration:"none",color:"aliceblue"}} to="/adminSwings">Swings</Link>
-
-          </div>
-
-        </div>
-      </div>
-      <div className="Navbar__cart__wishlist">
-        <div className="Navbar__cart__wishlist__inner">
-          <div onClick={()=>history.push('/allOrders')} className="wishlist">
-         
-          Orders <div className="wishlistnumeric">{allorders === null ? 0 : allorders.length}</div>
-      
-          </div>
-          <Link to={'/Admin'}>
-            <div onClick={handleAuthenticaton} className="nav-options-inner">
-              <span
-                style={{ color: 'white', textDecoration: 'none' }}
-                className="optionTwo"
-              >
-               Log Out
-              </span>
-            </div>
-          </Link>
-        </div>
-      </div>
-    </div>
+     
+    </NabarMenus>
+    <NavBarRight>
+      <MenuItem onClick={() => history.push("/allOrders")}>
+        Orders
+        <ItemCounter>{allorders === null ? 0 : allorders.length}</ItemCounter>
+      </MenuItem>
+      <MenuItem onClick={() => history.push("/Admincontact")}>
+        Contacts
+        <ItemCounter>{contact === null ? 0 : contact.length}</ItemCounter>
+      </MenuItem>
+      <MenuItem onClick={handleAuthenticaton}> Log Out</MenuItem>
+   
+    </NavBarRight>
+  </NavbarWrapper>
   )
 }
+
+const NavbarWrapper = styled.div`
+  height: 70px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 0.1px solid white;
+  background-color: white;
+  ${Media("xlscreens")} {
+    height: 5.12vw;
+  }
+`;
+const NabarMenus = styled.div`
+  display: flex;
+`;
+const MenuItem = styled.div`
+  font-size: 16px;
+  font-family: "gilroysemibold";
+  position: relative;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 20px;
+  cursor: pointer;
+  color: white;
+
+  &::after {
+    position: absolute;
+    content: "";
+    height: 5px;
+    width: 100%;
+    background-color: ${colors.secondaryColor};
+    bottom: 1px;
+    width: 0px;
+    transition: all 0.3s ease;
+  }
+  &:hover {
+    &::after {  
+      width: 100%;
+    }
+  }
+  ${Media("xlscreens")} {
+    font-size: 1.17vw;
+    height: 5.12vw;
+    padding: 0 1.46vw;
+    &::after {
+      height: 0.366vw;
+    }
+  }
+`;
+const NavBarRight = styled.div`
+  display: flex;
+  position: absolute;
+  right: 10px;
+  color: white;
+
+  ${Media("xlscreens")} {
+    right: 0.73vw;
+  }
+`;
+const ItemCounter = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 6px;
+  background-color: ${colors.mainColor};
+  color: white;
+  font-size: 10px;
+  height: 14px;
+  width: 14px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${Media("xlscreens")} {
+    top: 1.46vw;
+    right: 0.43vw;
+    font-size: 0.73vw;
+    height: 1.02vw;
+    width: 1.02vw;
+    border-radius: 0.73vw;
+  }
+`;
 
 export default AdminNavbar

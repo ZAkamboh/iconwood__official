@@ -67,6 +67,7 @@ function Centertabels() {
             }
 
 
+            values1.sort((a, b) => a - b).reverse()
 
             dispatch({
                 type: 'CENTERTABELS',
@@ -187,7 +188,7 @@ function Centertabels() {
 
                     })
 
-                    history.replace('/AdminHome')
+                    history.replace('/centertabels')
 
                 })
                 .catch(error => {
@@ -216,7 +217,8 @@ function Centertabels() {
                     <h5>Rate</h5>
                     <input
                         value={rate}
-                        type="number"
+                        type="text"
+
                         onChange={(e) => setrate(e.target.value)}
                     />
 

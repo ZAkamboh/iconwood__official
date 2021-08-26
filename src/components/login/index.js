@@ -28,7 +28,7 @@ function Login() {
     
 
     return (
-        <div className='login'>
+        <div  className='login'>
         <Link className="logo" to='/'>
             <h1>Icon Wood</h1>
         </Link>
